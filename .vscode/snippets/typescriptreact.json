@@ -1,0 +1,72 @@
+{
+  "React Stateful Component": {
+    "prefix": "rsc",
+    "body": [
+      "import React from 'react';",
+      "",
+      "interface Props {}",
+      "",
+      "interface State {}",
+      "",
+      "class $1 extends React.Component<Props, State> {",
+      "\trender() {",
+      "\t\treturn $2;",
+      "\t}",
+      "}",
+      "",
+      "export default $1;",
+      "$0"
+    ],
+    "description": "React stateful component"
+  },
+  "React Stateless Component": {
+    "prefix": "rstc",
+    "body": [
+      "import React from 'react';",
+      "",
+      "interface Props {}",
+      "",
+      "const $1: React.SFC<Props> = (props: Props) => {",
+      "\treturn ($2)",
+      "}",
+      "export default $1;",
+      "$0"
+    ],
+    "description": "React stateless component"
+  },
+  "React + Redux Container Component": {
+    "prefix": "rdcc",
+    "body": [
+      "import React from 'react';",
+      "import { connect } from 'react-redux';",
+      "",
+      "import RootStore from 'interfaces/rootStore';",
+      "",
+      "interface PropsFromState {}",
+      "",
+      "interface PropsFromDispatch {}",
+      "",
+      "interface Props extends PropsFromState, PropsFromDispatch {}",
+      "",
+      "class $1 extends React.Component<Props> {",
+      "\trender() {",
+      "\t\treturn $2;",
+      "\t}",
+      "}",
+      "",
+      "const mapStateToProps = ({}: RootStore) => {",
+      "\treturn {};",
+      "};",
+      "",
+      "const mapDispatchToProps = (dispatch: Function): PropsFromDispatch => {",
+      "\treturn {};",
+      "};",
+      "",
+      "export default connect<PropsFromState, PropsFromDispatch, any>(",
+      "\tmapStateToProps,",
+      "\tmapDispatchToProps",
+      ")($1);",
+      "$0"
+    ]
+  }
+}
