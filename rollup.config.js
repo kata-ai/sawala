@@ -1,12 +1,17 @@
-import typescript from "rollup-plugin-typescript2";
-import commonjs from "rollup-plugin-commonjs";
 import external from "rollup-plugin-peer-deps-external";
+import typescript from "rollup-plugin-typescript2";
 import resolve from "rollup-plugin-node-resolve";
+import commonjs from "rollup-plugin-commonjs";
+import replace from "rollup-plugin-replace";
+import babel from "rollup-plugin-babel";
+import image from "rollup-plugin-image";
+import json from "rollup-plugin-json";
+import copy from "rollup-plugin-copy";
 
 import pkg from "./package.json";
 
 export default {
-  input: "src/index.tsx",
+  input: "src/index.ts",
   output: [{
       file: pkg.main,
       format: "cjs",
@@ -18,11 +23,38 @@ export default {
       format: "es",
       exports: "named",
       sourcemap: true
-    }
+    },
+  ],
+  external: [
+    'react',
+    'react-dom',
+    'qiscus-sdk-core',
+    'superagent',
+    'mqtt',
+    'websocket-stream',
+    'moment',
+    'lodash',
+    'styled-components',
+    'shortid',
+    'nanoid'
   ],
   plugins: [
     external(),
-    resolve(),
+    babel({
+      exclude: 'node_modules/**'
+    }),
+    resolve({
+      jsnext: true,
+      main: true,
+      preferBuiltins: true,
+    }),
+    // HACK: removes formidable's attempt to overwrite `require`
+    replace({
+      include: 'node_modules/formidable/lib/*.js',
+      values: {
+        'if \\(global\\.GENTLY\\) require = GENTLY\\.hijack\\(require\\);': '',
+      }
+    }),
     typescript({
       rollupCommonJSResolveHack: true,
       exclude: "**/__tests__/**",
@@ -37,8 +69,19 @@ export default {
           "PropTypes",
           "createElement"
         ],
-        "node_modules/react-dom/index.js": ["render"]
+        "node_modules/react-dom/index.js": ["render"],
       }
-    })
+    }),
+    copy({
+      targets: [{
+        src: 'src/assets/images/*',
+        dest: 'images'
+      }],
+      copyOnce: true
+    }),
+    json({
+      compact: true
+    }),
+    image()
   ]
 };

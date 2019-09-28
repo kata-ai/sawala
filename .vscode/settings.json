@@ -12,5 +12,6 @@
     "build/**": true,
     "node_modules/**": true
   },
-  "eslint.enable": false
+  "eslint.enable": false,
+  "git.ignoreLimitWarning": true
 }
