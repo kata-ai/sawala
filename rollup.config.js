@@ -1,30 +1,31 @@
-import external from "rollup-plugin-peer-deps-external";
-import typescript from "rollup-plugin-typescript2";
-import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
-import replace from "rollup-plugin-replace";
-import babel from "rollup-plugin-babel";
-import image from "rollup-plugin-image";
-import json from "rollup-plugin-json";
-import copy from "rollup-plugin-copy";
-import svg from "rollup-plugin-svg";
+import external from 'rollup-plugin-peer-deps-external';
+import typescript from 'rollup-plugin-typescript2';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import replace from 'rollup-plugin-replace';
+import babel from 'rollup-plugin-babel';
+import image from 'rollup-plugin-image';
+import json from 'rollup-plugin-json';
+import copy from 'rollup-plugin-copy';
+import svg from 'rollup-plugin-svg';
 
-import pkg from "./package.json";
+import pkg from './package.json';
 
 export default {
-  input: "src/index.ts",
-  output: [{
+  input: 'src/index.ts',
+  output: [
+    {
       file: pkg.main,
-      format: "cjs",
-      exports: "named",
+      format: 'cjs',
+      exports: 'named',
       sourcemap: true
     },
     {
       file: pkg.module,
-      format: "es",
-      exports: "named",
+      format: 'es',
+      exports: 'named',
       sourcemap: true
-    },
+    }
   ],
   external: [
     'react',
@@ -45,37 +46,39 @@ export default {
       exclude: 'node_modules/**'
     }),
     resolve({
-      preferBuiltins: true,
+      preferBuiltins: true
     }),
     // HACK: removes formidable's attempt to overwrite `require`
     replace({
       include: 'node_modules/formidable/lib/*.js',
       values: {
-        'if \\(global\\.GENTLY\\) require = GENTLY\\.hijack\\(require\\);': '',
+        'if \\(global\\.GENTLY\\) require = GENTLY\\.hijack\\(require\\);': ''
       }
     }),
     typescript({
       rollupCommonJSResolveHack: true,
-      exclude: "**/__tests__/**",
+      exclude: '**/__tests__/**',
       clean: true
     }),
     commonjs({
-      include: ["node_modules/**"],
+      include: ['node_modules/**'],
       namedExports: {
-        "node_modules/react/react.js": [
-          "Children",
-          "Component",
-          "PropTypes",
-          "createElement"
+        'node_modules/react/react.js': [
+          'Children',
+          'Component',
+          'PropTypes',
+          'createElement'
         ],
-        "node_modules/react-dom/index.js": ["render"],
+        'node_modules/react-dom/index.js': ['render']
       }
     }),
     copy({
-      targets: [{
-        src: ['src/assets/images/*', 'assets/**'],
-        dest: 'images'
-      }],
+      targets: [
+        {
+          src: ['src/assets/images/*', 'assets/**'],
+          dest: 'images'
+        }
+      ],
       copyOnce: true
     }),
     json({
