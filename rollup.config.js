@@ -7,6 +7,7 @@ import babel from "rollup-plugin-babel";
 import image from "rollup-plugin-image";
 import json from "rollup-plugin-json";
 import copy from "rollup-plugin-copy";
+import svg from "rollup-plugin-svg";
 
 import pkg from "./package.json";
 
@@ -44,8 +45,6 @@ export default {
       exclude: 'node_modules/**'
     }),
     resolve({
-      jsnext: true,
-      main: true,
       preferBuiltins: true,
     }),
     // HACK: removes formidable's attempt to overwrite `require`
@@ -74,7 +73,7 @@ export default {
     }),
     copy({
       targets: [{
-        src: 'src/assets/images/*',
+        src: ['src/assets/images/*', 'assets/**'],
         dest: 'images'
       }],
       copyOnce: true
@@ -82,6 +81,7 @@ export default {
     json({
       compact: true
     }),
-    image()
+    image(),
+    svg()
   ]
 };
