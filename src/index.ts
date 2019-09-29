@@ -1,1 +1,1 @@
-export { default as QistaChat } from './QistaChat'
+export { default as QistaChat } from './QistaChat';

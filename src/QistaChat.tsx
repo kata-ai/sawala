@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { User } from './types'
+import { User } from './types';
 
 import ChatWindow from './components/ChatWindow';
 
 export type Props = {
   user: User;
   appId: string;
-}
+};
 
 export default class QistaChat extends React.PureComponent<Props> {
   constructor(props: Props) {
@@ -15,8 +15,6 @@ export default class QistaChat extends React.PureComponent<Props> {
   }
 
   render() {
-    return (
-      <ChatWindow {...this.props} />
-    )
+    return <ChatWindow {...this.props} />;
   }
 }

@@ -15,12 +15,12 @@ interface ConversationProps {
   onDeleteMessage: Function;
 }
 
-interface ConversationStates { }
+interface ConversationStates {}
 
 class QismoConversation extends React.Component<
   ConversationProps,
   ConversationStates
-  > {
+> {
   private messagesEnd: RefObject<any> = createRef();
 
   componentDidMount() {
@@ -45,9 +45,9 @@ class QismoConversation extends React.Component<
 
     const comments = room
       ? _.chain(room.comments)
-        .groupBy(e => moment(e.timestamp).format('dddd, DD MMMM YYYY'))
-        .map((values, key) => ({ values, key }))
-        .value()
+          .groupBy(e => moment(e.timestamp).format('dddd, DD MMMM YYYY'))
+          .map((values, key) => ({ values, key }))
+          .value()
       : [];
 
     return (

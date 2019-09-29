@@ -8,7 +8,7 @@ interface SpeechProps {
   comment: CommentInterface;
 }
 
-interface SpeechState { }
+interface SpeechState {}
 
 class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   render() {
@@ -57,12 +57,12 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
             <Speech.Image src={this.props.comment.payload.url} alt="image" />
           </Speech.Attachment>
         ) : (
-            this.props.comment.payload.file_name && (
-              <Speech.Attachment>
-                {this.props.comment.payload.file_name}
-              </Speech.Attachment>
-            )
-          ))
+          this.props.comment.payload.file_name && (
+            <Speech.Attachment>
+              {this.props.comment.payload.file_name}
+            </Speech.Attachment>
+          )
+        ))
       );
     }
   }

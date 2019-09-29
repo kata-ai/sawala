@@ -73,6 +73,7 @@ export function withQismoSDK(
     }
 
     componentWillMount() {
+      // tslint:disable-next-line: no-console
       console.log('component did mount', QiscusSDKCore);
       window.qiscus.init({
         AppId: APP_ID,

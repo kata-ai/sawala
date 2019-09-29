@@ -14,7 +14,7 @@ interface InnerProps {
   // user: User;
 }
 
-interface OuterProps extends withQismoSDKProps { }
+interface OuterProps extends withQismoSDKProps {}
 
 export type Props = InnerProps & OuterProps;
 
@@ -23,12 +23,14 @@ class ChatWindow extends React.PureComponent<Props> {
     super(props);
   }
 
-  handleSomething() {
-
+  handleSomething(event: any) {
+    // tslint:disable-next-line: no-console
+    console.log('handle something here.', event);
   }
 
   render() {
     // const { isShowPreviewComment } = this.props;
+    // tslint:disable-next-line: no-console
     console.log('chat window inside here', this.props);
 
     return (
@@ -60,7 +62,7 @@ class ChatWindow extends React.PureComponent<Props> {
         />
         <Message {...this.props} />
       </React.Fragment>
-    )
+    );
   }
 }
 

@@ -10,9 +10,7 @@ export const Main = styled.div<{ background?: string }>`
   height: 100%;
   background: ${props =>
     props.background
-      ? `url(${
-          props.background
-        }) center center / cover no-repeat rgb(255, 255, 255)`
+      ? `url(${props.background}) center center / cover no-repeat rgb(255, 255, 255)`
       : '#fff'};
   flex-direction: column;
   justify-content: space-between;

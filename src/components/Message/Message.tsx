@@ -71,6 +71,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
 
   render() {
     const { room, activeReplyComment } = this.props;
+    // tslint:disable-next-line: no-console
     console.log('message render', activeReplyComment);
     return room ? (
       <Fragment>

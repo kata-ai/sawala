@@ -26,7 +26,7 @@ interface InnerProps {
   isLastComment?: boolean;
 }
 
-interface CommentStates { }
+interface CommentStates {}
 
 type CommentProps = InnerProps & withQismoSDKProps;
 
@@ -76,6 +76,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                     <DropdownItem
                       onClick={() => {
                         // event.stopPropagation();
+                        // tslint:disable-next-line: no-console
                         console.log('on click comment', comment);
                         if (this.props.onReplyCommment) {
                           this.props.onReplyCommment(comment);
@@ -93,19 +94,20 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                   </DropdownMenu>
                 </Dropdown>
               ) : (
-                  <Comment.Button
-                    type="button"
-                    color="secondary"
-                    onClick={() => {
-                      console.log('on click comment left', comment);
-                      if (this.props.onReplyCommment) {
-                        this.props.onReplyCommment(comment);
-                      }
-                    }}
-                  >
-                    <Icon image="reply-icon" size="18px" color="#ffffff" />
-                  </Comment.Button>
-                )}
+                <Comment.Button
+                  type="button"
+                  color="secondary"
+                  onClick={() => {
+                    // tslint:disable-next-line: no-console
+                    console.log('on click comment left', comment);
+                    if (this.props.onReplyCommment) {
+                      this.props.onReplyCommment(comment);
+                    }
+                  }}
+                >
+                  <Icon image="reply-icon" size="18px" color="#ffffff" />
+                </Comment.Button>
+              )}
             </Comment.ChatAction>
             <Comment.ChatTime position={isMyComment ? 'right' : 'left'}>
               {moment(comment.timestamp).format('HH:ss')}
@@ -117,8 +119,8 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
             )}
           </Fragment>
         ) : (
-            <Speech {...this.props} />
-          )}
+          <Speech {...this.props} />
+        )}
       </Comment.Chat>
     );
   }

@@ -19,7 +19,7 @@ interface HeaderProps {
   onOpenAssignment(type: 'add' | 'remove'): void;
 }
 
-interface HeaderStates { }
+interface HeaderStates {}
 
 class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
   submitResolve = (data: any) => {
@@ -27,7 +27,8 @@ class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
   };
 
   openResolve = () => {
-    console.log('handle open resolve here.')
+    // tslint:disable-next-line: no-console
+    console.log('handle open resolve here.');
   };
 
   render() {
