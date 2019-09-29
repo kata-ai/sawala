@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Room } from '../../types';
 
-import { Icon } from '../Commons';
 import Header from './components';
 
 import {
@@ -11,6 +10,7 @@ import {
   DropdownMenu,
   DropdownItem
 } from '@kata-kit/dropdown';
+import { MoreIcon } from 'icons';
 
 interface HeaderProps {
   room?: Room;
@@ -55,7 +55,7 @@ class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
             <Dropdown dropDirection="down">
               <DropdownToggle caret={false}>
                 <Header.Button type="button" color="secondary" size="sm" isIcon>
-                  <Icon image="more-icon" size="18px" color="#676b6d" />
+                  <MoreIcon />
                 </Header.Button>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu">

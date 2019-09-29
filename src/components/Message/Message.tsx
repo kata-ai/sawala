@@ -4,8 +4,9 @@ import { withQismoSDKProps } from '../../containers/withQismoSDK';
 
 import { Room } from '../../types';
 
-import { Icon } from '../Commons';
 import Message from './components';
+
+import { ImageIcon, ReplyIcon, FileIcon, SendIcon, CloseIcon } from 'icons';
 
 interface InnerProps {
   room?: Room;
@@ -78,7 +79,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
         {activeReplyComment && (
           <Message.Preview show>
             <Message.PreviewButton type="button" color="secondary">
-              <Icon image="reply-icon" size="24px" color="#ffffff" />
+              <ReplyIcon />
             </Message.PreviewButton>
             <Message.PreviewContent>
               <Message.h4>{activeReplyComment.username_as}</Message.h4>
@@ -93,7 +94,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
                 }
               }}
             >
-              <Icon image="close-icon" size="24px" color="#676b6d" />
+              <CloseIcon />
             </Message.CloseButton>
           </Message.Preview>
         )}
@@ -107,7 +108,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
                 document.getElementById('btn-file')!.click();
               }}
             >
-              <Icon image="file-icon" size="24px" color="#949A9D" />
+              <FileIcon />
             </Message.Button>
             <Message.Button
               type="button"
@@ -117,7 +118,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
                 document.getElementById('btn-image')!.click();
               }}
             >
-              <Icon image="img-icon" size="24px" color="#949A9D" />
+              <ImageIcon />
             </Message.Button>
             <input
               type="file"
@@ -169,7 +170,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
                 }
               }}
             >
-              <Icon image="send-icon" size="24px" color="#006fe6" />
+              <SendIcon />
             </Message.Button>
           </Message.Action>
         </Message.Index>

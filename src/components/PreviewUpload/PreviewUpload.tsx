@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Room } from '../../types';
 
-import { Icon } from '../Commons';
 import Preview from './components';
+import { SendIcon, CloseIcon } from 'icons';
 
 interface PreviewProps {
   room?: Room;
@@ -30,7 +30,7 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
             color="secondary"
             onClick={this.props.onClosed}
           >
-            <Icon image="close-icon" size="24px" color="#676b6d" />
+            <CloseIcon />
           </Preview.CloseButton>
         </Preview.Header>
         <Preview.Picker>
@@ -53,7 +53,7 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
               this.setState({ caption: undefined });
             }}
           >
-            <Icon image="send-icon" size="24px" color="#006fe6" />
+            <SendIcon />
           </Preview.ActionButton>
         </Preview.Action>
       </Preview.Main>

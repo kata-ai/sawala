@@ -4,10 +4,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import babel from 'rollup-plugin-babel';
-import image from 'rollup-plugin-image';
 import json from 'rollup-plugin-json';
-import copy from 'rollup-plugin-copy';
-import svg from 'rollup-plugin-svg';
 
 import pkg from './package.json';
 
@@ -72,19 +69,8 @@ export default {
         'node_modules/react-dom/index.js': ['render']
       }
     }),
-    copy({
-      targets: [
-        {
-          src: ['src/assets/images/*', 'assets/**'],
-          dest: 'images'
-        }
-      ],
-      copyOnce: true
-    }),
     json({
       compact: true
-    }),
-    image(),
-    svg()
+    })
   ]
 };

@@ -12,10 +12,9 @@ import {
 
 import { withQismoSDKProps } from '../../containers/withQismoSDK';
 
-import { Icon } from '../Commons';
-
 import { Comment } from './components';
 import { Speech } from '../Speech';
+import { MoreIcon, TickIcon, ReplyIcon } from 'icons';
 
 interface InnerProps {
   index: number;
@@ -69,7 +68,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                 <Dropdown dropDirection={isLastComment ? 'up' : 'down'}>
                   <DropdownToggle caret={false}>
                     <Comment.Button type="button" color="secondary">
-                      <Icon image="more-icon" size="18px" color="#ffffff" />
+                      <MoreIcon />
                     </Comment.Button>
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-menu">
@@ -105,7 +104,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                     }
                   }}
                 >
-                  <Icon image="reply-icon" size="18px" color="#ffffff" />
+                  <ReplyIcon />
                 </Comment.Button>
               )}
             </Comment.ChatAction>
@@ -114,7 +113,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
             </Comment.ChatTime>
             {isMyComment && (
               <Comment.ChatTick>
-                <Icon image="tick-icon" size="8px" color="#2bb826" />
+                <TickIcon />
               </Comment.ChatTick>
             )}
           </Fragment>
