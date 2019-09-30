@@ -1,15 +1,18 @@
 import React, { ComponentType, Component, ComponentClass } from 'react';
 import moment from 'moment';
 import QiscusSDKCore from 'libs/SDKCore';
-import { Conversation, Comment, Room, User, QiscusCore } from 'types';
+import { Conversation, Comment, Room, User, QiscusCore, Selected } from 'types';
 
 export type withQismoSDKProps = {
-  coreSDK?: QiscusCore;
+  core?: QiscusCore;
+  selected?: Selected;
+  isLoadingMore?: boolean;
   isLogin?: boolean;
   room?: Room;
   conversations?: Conversation[];
   previewImage?: string;
   activeReplyComment?: Comment;
+  onFetchComments?: (firstId: number) => void;
   onInit?: (user: User) => void;
   onSubmitImage?: (caption?: string) => void;
   onSubmitFile?: (file: File) => void;
@@ -29,6 +32,7 @@ interface QiscusSDK {
   previewImage?: string;
   file?: File;
   activeReplyComment?: Comment;
+  isLoadingMore?: boolean;
 }
 
 const APP_USER_TARGET = 'fikri@qiscus.com';
@@ -50,6 +54,7 @@ export function withQismoSDK(
       this.handleSubmitFile = this.handleSubmitFile.bind(this);
       this.handleSubmitImage = this.handleSubmitImage.bind(this);
       this.handleSubmitText = this.handleSubmitText.bind(this);
+      this.handleFetchComments = this.handleFetchComments.bind(this);
       this.handleClearPreview = this.handleClearPreview.bind(this);
       this.handleReplyComment = this.handleReplyComment.bind(this);
       this.handleCloseReplyComment = this.handleCloseReplyComment.bind(this);
@@ -179,17 +184,8 @@ export function withQismoSDK(
         const roomId = room.id;
         if (!activeReplyComment) {
           window.qiscus.sendComment(roomId, text).then((response: any) => {
-            const comments = room.comments.concat(response);
-            if (this.state.conversations) {
-              this.setState({ room: { comments } });
-            } else {
-              // this.setState({ conversations: response });
-            }
             // tslint:disable-next-line:no-console
-            console.log('handle submit comment text', {
-              response,
-              comments
-            });
+            console.log('handle submit comment text', response);
           });
         } else {
           const payload = {
@@ -207,14 +203,17 @@ export function withQismoSDK(
             .then((response: any) => {
               // tslint:disable-next-line:no-console
               console.log('handle submit reply comment', response);
-              if (this.state.conversations) {
-                this.state.conversations.concat(response);
-              } else {
-                this.setState({ conversations: response });
-              }
             });
         }
       }
+    }
+
+    handleFetchComments(firstId: number) {
+      console.log('handle fetch comments', firstId);
+      this.setState({ isLoadingMore: true });
+      window.qiscus.loadMore(firstId).then(() => {
+        this.setState({ isLoadingMore: false });
+      });
     }
 
     handleReplyComment(comment: Comment) {
@@ -236,9 +235,12 @@ export function withQismoSDK(
     render() {
       return (
         <WrappedComponent
-          coreSDK={QiscusSDKCore}
+          core={QiscusSDKCore}
+          selected={QiscusSDKCore.selected}
+          isLoadingMore={this.state.isLoadingMore}
           onInit={this.handleInit}
           onPreviewImage={this.handlePreviewImage}
+          onFetchComments={this.handleFetchComments}
           onSubmitFile={this.handleSubmitFile}
           onSubmitImage={this.handleSubmitImage}
           onSubmitText={this.handleSubmitText}

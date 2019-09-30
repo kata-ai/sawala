@@ -15,6 +15,8 @@ import { withQismoSDKProps } from 'containers/withQismoSDK';
 import { Comment } from './components';
 import { Speech } from '../Speech';
 import { MoreIcon, TickIcon, ReplyIcon } from 'icons';
+import getAvatar from 'libs/utils/getAvatar';
+import { AVATAR } from 'default';
 
 interface InnerProps {
   index: number;
@@ -39,7 +41,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
       onDeleteMessage
     } = this.props;
     const isMyComment: boolean = this.isMyComment(comment.username_real);
-    const isFirstComment: boolean = this.isFirstComment(comment.username);
+    const isFirstComment: boolean = this.isFirstComment(comment.username_real);
 
     return (
       <Comment.Chat
@@ -53,7 +55,8 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
             {isFirstComment && (
               <Comment.ChatImage position={isMyComment ? 'right' : 'left'}>
                 <Comment.Image
-                  src={comment.user_avatar_url || comment.avatar}
+                  onError={this.addDefaultSrc}
+                  src={getAvatar(comment.avatar)}
                 />
               </Comment.ChatImage>
             )}
@@ -124,20 +127,20 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
     );
   }
 
+  private addDefaultSrc(event: any) {
+    event.target.src = AVATAR;
+  }
+
   private isMyComment = (email: string): boolean => {
-    const qiscusAuth = window.localStorage.getItem('qiscusAuth');
-    if (qiscusAuth) {
-      const authData: Auth = JSON.parse(qiscusAuth);
-      if (qiscusAuth) {
-        return email === authData.email;
-      }
+    if (this.props.core && this.props.core.userData) {
+      return email === this.props.core.userData.email;
     }
     return false;
   };
 
   private isFirstComment = (username: string): boolean => {
     return this.props.commentBefore
-      ? username !== this.props.commentBefore.username
+      ? username !== this.props.commentBefore.username_real
       : true;
   };
 }

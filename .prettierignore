@@ -1,2 +1,4 @@
 /package.json
 /tsconfig.json
+/src/default.ts
+/src/libs/utils.ts

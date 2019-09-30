@@ -1,3 +1,5 @@
+import { Selected, Comment, Extras } from './qiscus';
+
 export type Pages = {
   name: string;
   icon: string;
@@ -73,81 +75,6 @@ export type Conversation = {
   unread_comments?: string[];
 };
 
-export type CommentType =
-  | 'text'
-  | 'buttons'
-  | 'card'
-  | 'carousel'
-  | 'custom'
-  | 'file_attachment'
-  | 'reply'
-  | 'system_event'
-  | 'image';
-
-export type Payload = {
-  replied_comment_id?: string;
-  replied_comment_is_deleted?: boolean;
-  replied_comment_message?: string;
-  replied_comment_payload?: Payload;
-  replied_comment_sender_email?: string;
-  replied_comment_sender_username?: string;
-  replied_comment_type?: CommentType;
-  text?: string;
-  caption?: string;
-  encryption_key?: string;
-  file_name?: string;
-  pages?: number;
-  size?: number;
-  url?: string;
-  type: CommentType;
-  content: Content;
-};
-
-export type Comment = {
-  comment_before_id: number;
-  comment_before_id_str: string;
-  disable_link_preview: boolean;
-  email: string;
-  extras: Extras;
-  id: number;
-  id_str: string;
-  is_deleted: boolean;
-  is_public_channel: boolean;
-  message: string;
-  payload: Payload;
-  room_avatar: string;
-  room_id: number;
-  room_id_str: string;
-  room_name: string;
-  room_type: string;
-  status: string;
-  timestamp: Date;
-  topic_id: number;
-  topic_id_str: string;
-  type: string;
-  unique_temp_id: string;
-  unix_nano_timestamp: number;
-  unix_timestamp: number;
-  user_avatar: UserAvatar;
-  user_avatar_url: string;
-  user_id: number;
-  user_id_str: string;
-  username: string;
-  // additional
-  isChannel: boolean;
-  isDelivered: boolean;
-  isFailed: boolean;
-  isPending: boolean;
-  isRead: boolean;
-  isSent: boolean;
-  subtype: string;
-  username_as: string;
-  username_real: string;
-  avatar: string;
-};
-
-export type Extras = {};
-
 export type Content = {
   caption: string;
   file_name: number;
@@ -221,13 +148,14 @@ export type App = {
 export type QiscusCore = {
   events: UI;
   rooms: any[];
-  selected: null;
+  selected: Selected | null;
   room_name_id_map: UI;
   pendingCommentId: number;
   uploadedFiles: any[];
   chatmateStatus: null;
   version: string;
-  userData: UI;
+  // TODO: set to interface
+  userData: any;
   AppId: null;
   baseURL: string;
   uploadURL: string;

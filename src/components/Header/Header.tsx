@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { Room } from 'types';
+import { withQismoSDKProps } from 'containers/withQismoSDK';
 
 import Header from './components';
+
+import getAvatar from 'libs/utils/getAvatar';
 
 import {
   Dropdown,
@@ -11,13 +13,15 @@ import {
   DropdownItem
 } from '@kata-kit/dropdown';
 import { MoreIcon } from 'icons';
+import { AVATAR } from 'default';
 
-interface HeaderProps {
-  room?: Room;
+interface InnerProps {
   onSwitchBot: Function;
   onOpenDetail: Function;
   onOpenAssignment(type: 'add' | 'remove'): void;
 }
+
+type HeaderProps = InnerProps & withQismoSDKProps;
 
 interface HeaderStates {}
 
@@ -32,17 +36,21 @@ class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
   };
 
   render() {
-    const { room, onOpenDetail, onOpenAssignment } = this.props;
+    const { selected, onOpenDetail, onOpenAssignment } = this.props;
 
-    return room ? (
-      <Header.Header key={room.id}>
+    return selected ? (
+      <Header.Header key={selected.id}>
         <Header.Item>
           <Header.ItemImage>
-            <Header.Image src={room.avatar} alt="avatar" />
+            <Header.Image
+              onError={this.addDefaultSrc}
+              src={getAvatar(selected.avatar)}
+              alt="avatar"
+            />
           </Header.ItemImage>
           <Header.ItemUser>
-            <Header.UserName>{room.name}</Header.UserName>
-            <Header.UserAlias>{room.custom_subtitle}</Header.UserAlias>
+            <Header.UserName>{selected.name}</Header.UserName>
+            <Header.UserAlias>{selected.custom_subtitle}</Header.UserAlias>
           </Header.ItemUser>
           <Header.ItemAction>
             <Header.ButtonResolved
@@ -74,6 +82,10 @@ class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
         </Header.Item>
       </Header.Header>
     ) : null;
+  }
+
+  private addDefaultSrc(event: any) {
+    event.target.src = AVATAR;
   }
 }
 

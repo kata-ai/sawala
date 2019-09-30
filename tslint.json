@@ -2,7 +2,12 @@
   "rulesDirectory": ["tslint-plugin-prettier"],
   "extends": ["tslint-config-kata/react", "tslint-config-prettier"],
   "linterOptions": {
-    "exclude": ["config/**/*.js", "node_modules/**/*"]
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*",
+      "src/default.ts",
+      "src/libs/utils.ts"
+    ]
   },
   "rules": {
     "interface-name": [false],

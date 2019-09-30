@@ -32,13 +32,13 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private renderText() {
-    if (this.typeOfCommentIs('text')) {
+    if (this.typeOfCommentIs(CommentType.Text)) {
       return <p>{this.props.comment.message}</p>;
     }
   }
 
   private renderSystemEvent() {
-    if (this.typeOfCommentIs('system_event')) {
+    if (this.typeOfCommentIs(CommentType.SystemEvent)) {
       return (
         <Speech.Info>
           <Speech.System>{this.props.comment.message}</Speech.System>
@@ -48,7 +48,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private renderFileAttachment() {
-    if (this.typeOfCommentIs('file_attachment')) {
+    if (this.typeOfCommentIs(CommentType.FileAttachment)) {
       return (
         this.props.comment.payload &&
         this.props.comment.payload.url &&
@@ -70,7 +70,8 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   private renderReplyText() {
     if (
       this.isReply() &&
-      (this.typeOfReplyCommentIs('text') || this.typeOfReplyCommentIs('reply'))
+      (this.typeOfReplyCommentIs(CommentType.Text) ||
+        this.typeOfReplyCommentIs(CommentType.Reply))
     ) {
       return (
         <Fragment>
@@ -86,7 +87,10 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private renderReplyFileAttachment() {
-    if (this.isReply() && this.typeOfReplyCommentIs('file_attachment')) {
+    if (
+      this.isReply() &&
+      this.typeOfReplyCommentIs(CommentType.FileAttachment)
+    ) {
       return (
         this.props.comment.payload &&
         this.props.comment.payload.replied_comment_payload && (
@@ -101,7 +105,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private renderReplyButtons() {
-    if (this.isReply() && this.typeOfReplyCommentIs('buttons')) {
+    if (this.isReply() && this.typeOfReplyCommentIs(CommentType.Buttons)) {
       return (
         <Speech.Reply>
           <p>{this.props.comment.message}</p>
@@ -111,7 +115,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private renderReplyCard() {
-    if (this.isReply() && this.typeOfReplyCommentIs('card')) {
+    if (this.isReply() && this.typeOfReplyCommentIs(CommentType.Card)) {
       return (
         <Speech.Reply>
           <p>{this.props.comment.message}</p>
@@ -121,7 +125,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private renderReplyCarousel() {
-    if (this.isReply() && this.typeOfReplyCommentIs('carousel')) {
+    if (this.isReply() && this.typeOfReplyCommentIs(CommentType.Carousel)) {
       return (
         <Speech.Reply>
           <p>{this.props.comment.message}</p>
@@ -131,7 +135,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private renderReplyCustom() {
-    if (this.isReply() && this.typeOfReplyCommentIs('custom')) {
+    if (this.isReply() && this.typeOfReplyCommentIs(CommentType.Custom)) {
       return (
         <Speech.Reply>
           <p>{this.props.comment.message}</p>
@@ -141,7 +145,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   }
 
   private isReply = (): boolean => {
-    return this.props.comment.type === 'reply';
+    return this.props.comment.type === CommentType.Reply;
   };
 
   private typeOfReplyCommentIs = (type: CommentType) => {
@@ -152,10 +156,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   };
 
   private typeOfCommentIs = (type: CommentType) => {
-    if (this.props.comment.payload) {
-      return this.props.comment.type === type;
-    }
-    return false;
+    return this.props.comment.type === type;
   };
 
   private isImage = (path: string) => {

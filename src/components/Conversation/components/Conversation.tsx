@@ -55,6 +55,21 @@ export const Span = styled.span`
   color: #979797;
 `;
 
+export const ButtonMore = styled(KataButton)`
+  padding: 0 8px;
+  color: ${variables.colors.white} !important;
+  background-color: ${variables.colors.darkKataBlue} !important;
+  border-radius: 4px;
+  margin: 28px 0;
+
+  &:hover,
+  &:active,
+  &:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+`;
+
 export const Date = styled(Span)`
   padding: 0 8px;
   color: ${variables.colors.white};

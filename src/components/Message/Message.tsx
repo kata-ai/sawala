@@ -2,14 +2,12 @@ import React, { Fragment } from 'react';
 
 import { withQismoSDKProps } from 'containers/withQismoSDK';
 
-import { Room } from 'types';
-
 import Message from './components';
 
 import { ImageIcon, ReplyIcon, FileIcon, SendIcon, CloseIcon } from 'icons';
 
 interface InnerProps {
-  room?: Room;
+  onSubmitComment: () => void;
 }
 
 interface MessageState {
@@ -61,18 +59,24 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
 
   handleKeyDown = (event: any) => {
     if (event.keyCode === 13 && event.ctrlKey) {
-      if (this.props.onSubmitText) {
-        this.props.onSubmitText(this.state.value);
-        this.setState({
-          value: ''
-        });
-      }
+      this.handleSubmitText();
     }
   };
 
+  handleSubmitText() {
+    if (this.props.onSubmitText) {
+      this.props.onSubmitText(this.state.value);
+      this.setState({
+        value: '',
+        rows: 1
+      });
+      this.props.onSubmitComment();
+    }
+  }
+
   render() {
-    const { room, activeReplyComment } = this.props;
-    return room ? (
+    const { activeReplyComment } = this.props;
+    return (
       <Fragment>
         {activeReplyComment && (
           <Message.Preview show>
@@ -160,12 +164,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
                 event.stopPropagation();
                 event.preventDefault();
 
-                if (this.props.onSubmitText) {
-                  this.props.onSubmitText(this.state.value);
-                  this.setState({
-                    value: ''
-                  });
-                }
+                this.handleSubmitText();
               }}
             >
               <SendIcon />
@@ -173,7 +172,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
           </Message.Action>
         </Message.Index>
       </Fragment>
-    ) : null;
+    );
   }
 }
 

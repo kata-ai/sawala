@@ -18,9 +18,19 @@ interface OuterProps extends withQismoSDKProps {}
 
 export type Props = InnerProps & OuterProps;
 
-class ChatWindow extends React.PureComponent<Props> {
+type States = {
+  reload: boolean;
+};
+
+class ChatWindow extends React.PureComponent<Props, States> {
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      reload: false
+    };
+
+    this.handleSubmitComment = this.handleSubmitComment.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +43,12 @@ class ChatWindow extends React.PureComponent<Props> {
   handleSomething(event: any) {
     // tslint:disable-next-line: no-console
     console.log('handle something here.', event);
+  }
+
+  handleSubmitComment() {
+    this.setState(prevState => ({
+      reload: !prevState.reload
+    }));
   }
 
   render() {
@@ -56,18 +72,19 @@ class ChatWindow extends React.PureComponent<Props> {
           }}
         />
         <Header
-          room={this.props.room}
           onSwitchBot={this.handleSomething}
           onOpenDetail={this.handleSomething}
           onOpenAssignment={this.handleSomething}
+          {...this.props}
         />
         <Conversation
-          room={this.props.room}
+          reload={this.state.reload}
           showPreview={false}
           onOpenDetailMessage={this.handleSomething}
           onDeleteMessage={this.handleSomething}
+          {...this.props}
         />
-        <Message {...this.props} />
+        <Message onSubmitComment={this.handleSubmitComment} {...this.props} />
       </React.Fragment>
     );
   }
