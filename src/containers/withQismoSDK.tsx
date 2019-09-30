@@ -16,6 +16,7 @@ export type withQismoSDKProps = {
   onInit?: (user: User) => void;
   onSubmitImage?: (caption?: string) => void;
   onSubmitFile?: (file: File) => void;
+  onDeleteComment?: (uniqueId: string, isForEveryone: boolean) => void;
   onClearPreview?: () => void;
   onPreviewImage?: (file: File) => void;
   onSubmitText?: (text: string) => void;
@@ -59,6 +60,7 @@ export function withQismoSDK(
       this.handleReplyComment = this.handleReplyComment.bind(this);
       this.handleCloseReplyComment = this.handleCloseReplyComment.bind(this);
       this.handleSetActiveRoom = this.handleSetActiveRoom.bind(this);
+      this.handleDeleteComment = this.handleDeleteComment.bind(this);
       this._setAuthData = this._setAuthData.bind(this);
       this._setLogin = this._setLogin.bind(this);
       this._chatTarget = this._chatTarget.bind(this);
@@ -86,7 +88,6 @@ export function withQismoSDK(
             if (messages) {
               // tslint:disable-next-line:no-console
               console.log(`Qiscus newMessagesCallback`, messages);
-              // this._updateConversations(messages[0]);
             }
           }
         }
@@ -209,7 +210,6 @@ export function withQismoSDK(
     }
 
     handleFetchComments(firstId: number) {
-      console.log('handle fetch comments', firstId);
       this.setState({ isLoadingMore: true });
       window.qiscus.loadMore(firstId).then(() => {
         this.setState({ isLoadingMore: false });
@@ -232,6 +232,18 @@ export function withQismoSDK(
       this.setState({ room });
     }
 
+    handleDeleteComment(uniqueId: string, isForEveryone: boolean) {
+      const { room } = this.state;
+      if (room) {
+        window.qiscus
+          .deleteComment(room.id, [uniqueId], isForEveryone, true)
+          .then((response: any) => {
+            // tslint:disable-next-line:no-console
+            console.log('delete comment', response);
+          });
+      }
+    }
+
     render() {
       return (
         <WrappedComponent
@@ -241,6 +253,7 @@ export function withQismoSDK(
           onInit={this.handleInit}
           onPreviewImage={this.handlePreviewImage}
           onFetchComments={this.handleFetchComments}
+          onDeleteComment={this.handleDeleteComment}
           onSubmitFile={this.handleSubmitFile}
           onSubmitImage={this.handleSubmitImage}
           onSubmitText={this.handleSubmitText}

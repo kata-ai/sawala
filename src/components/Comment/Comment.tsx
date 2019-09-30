@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import moment from 'moment';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { Comment as CommentInterface, Auth } from 'types';
+import { Comment as CommentInterface } from 'types';
 
 import {
   Dropdown,
@@ -21,10 +23,10 @@ import { AVATAR } from 'default';
 interface InnerProps {
   index: number;
   comment: CommentInterface;
-  onOpenDetailMessage: Function;
-  onDeleteMessage: Function;
   commentBefore?: CommentInterface | null;
   isLastComment?: boolean;
+  onOpenDetailMessage: () => void;
+  onDeleteMessage: () => void;
 }
 
 interface CommentStates {}
@@ -32,14 +34,28 @@ interface CommentStates {}
 type CommentProps = InnerProps & withQismoSDKProps;
 
 class QismoComment extends React.Component<CommentProps, CommentStates> {
+  handleDeleteComment(id: string) {
+    confirmAlert({
+      title: 'Delete message',
+      message: 'Are you sure want to delete this message?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this._confirmDeleteComment(id)
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            // tslint:disable-next-line: no-console
+            console.log('delete comment cancel.');
+          }
+        }
+      ]
+    });
+  }
+
   render() {
-    const {
-      index,
-      comment,
-      isLastComment,
-      onOpenDetailMessage,
-      onDeleteMessage
-    } = this.props;
+    const { index, comment, isLastComment, onOpenDetailMessage } = this.props;
     const isMyComment: boolean = this.isMyComment(comment.username_real);
     const isFirstComment: boolean = this.isFirstComment(comment.username_real);
 
@@ -77,9 +93,6 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                   <DropdownMenu className="dropdown-menu">
                     <DropdownItem
                       onClick={() => {
-                        // event.stopPropagation();
-                        // tslint:disable-next-line: no-console
-                        console.log('on click comment', comment);
                         if (this.props.onReplyCommment) {
                           this.props.onReplyCommment(comment);
                         }
@@ -87,7 +100,11 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                     >
                       Reply
                     </DropdownItem>
-                    <DropdownItem onClick={() => onDeleteMessage()}>
+                    <DropdownItem
+                      onClick={() =>
+                        this.handleDeleteComment(comment.unique_id)
+                      }
+                    >
                       Delete
                     </DropdownItem>
                     <DropdownItem onClick={() => onOpenDetailMessage()}>
@@ -125,6 +142,13 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
         )}
       </Comment.Chat>
     );
+  }
+
+  private _confirmDeleteComment(id: string) {
+    if (this.props.onDeleteComment) {
+      this.props.onDeleteComment(id, true);
+      this.props.onDeleteMessage();
+    }
   }
 
   private addDefaultSrc(event: any) {

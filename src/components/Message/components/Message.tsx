@@ -60,6 +60,7 @@ export const Textarea = styled.textarea`
   font-size: 13px;
   line-height: 24px;
   border: none;
+  overflow: auto;
   outline: none;
   box-shadow: none;
   resize: none;
@@ -67,7 +68,6 @@ export const Textarea = styled.textarea`
   margin: 6px;
   width: 100%;
   height: 100%;
-  overflow: hidden !important;
   overflow-y: scroll;
 
   &::placeholder {
@@ -97,13 +97,13 @@ export const Button = styled(KataButton)`
 
 export const Preview = styled.div<{ show?: boolean }>`
   position: absolute;
-  bottom: 8px;
+  bottom: 64px;
   right: 0;
   background-color: #ffffff;
   margin-bottom: 0;
   padding: 16px 24px;
   order: 1;
-  width: 100%;
+  width: calc(100% - 280px);
   height: 80px;
   border-top: 1px solid #e2e6e8;
   display: ${props => (props.show ? 'flex' : 'none')};

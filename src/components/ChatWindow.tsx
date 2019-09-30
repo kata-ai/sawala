@@ -52,7 +52,6 @@ class ChatWindow extends React.PureComponent<Props, States> {
   }
 
   render() {
-    // const { isShowPreviewComment } = this.props;
     // tslint:disable-next-line: no-console
     console.log('chat window inside here', this.props);
 
@@ -77,13 +76,7 @@ class ChatWindow extends React.PureComponent<Props, States> {
           onOpenAssignment={this.handleSomething}
           {...this.props}
         />
-        <Conversation
-          reload={this.state.reload}
-          showPreview={false}
-          onOpenDetailMessage={this.handleSomething}
-          onDeleteMessage={this.handleSomething}
-          {...this.props}
-        />
+        <Conversation reload={this.state.reload} {...this.props} />
         <Message onSubmitComment={this.handleSubmitComment} {...this.props} />
       </React.Fragment>
     );

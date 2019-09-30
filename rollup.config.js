@@ -5,6 +5,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import babel from 'rollup-plugin-babel';
 import json from 'rollup-plugin-json';
+import postcss from 'rollup-plugin-postcss';
 
 import pkg from './package.json';
 
@@ -35,7 +36,8 @@ export default {
     'lodash',
     'styled-components',
     'shortid',
-    'nanoid'
+    'nanoid',
+    'react-confirm-alert'
   ],
   plugins: [
     external(),
@@ -69,6 +71,9 @@ export default {
         ],
         'node_modules/react-dom/index.js': ['render']
       }
+    }),
+    postcss({
+      extensions: ['.css']
     }),
     json({
       compact: true

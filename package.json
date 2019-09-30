@@ -23,12 +23,10 @@
   "author": "Kata.ai <dev@kata.ai>",
   "license": "ISC",
   "homepage": "https://bitbucket.org/yesboss/qista#readme",
-  "dependencies": {
-    "qiscus-sdk-core": "^2.8.33"
-  },
   "devDependencies": {
     "@kata-kit/button": "^0.7.4",
     "@kata-kit/dropdown": "^0.7.4",
+    "@kata-kit/theme": "^0.7.2",
     "@svgr/cli": "^4.3.3",
     "@types/jest": "^24.0.18",
     "@types/lodash-es": "^4.17.3",
@@ -42,7 +40,9 @@
     "lodash-es": "^4.17.15",
     "moment": "^2.24.0",
     "prettier": "^1.18.2",
+    "qiscus-sdk-core": "^2.8.33",
     "react": "^16.9.0",
+    "react-confirm-alert": "^2.4.1",
     "react-dom": "^16.9.0",
     "react-scripts-ts": "^3.1.0",
     "react-test-renderer": "^16.9.0",
@@ -55,6 +55,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-npm": "^2.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
+    "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-typescript2": "^0.24.3",
     "styled-components": "^4.4.0",

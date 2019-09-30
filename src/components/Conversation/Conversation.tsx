@@ -12,9 +12,6 @@ import { Comment } from '../Comment';
 
 interface InnerProps {
   reload: boolean;
-  showPreview: boolean;
-  onOpenDetailMessage: Function;
-  onDeleteMessage: Function;
 }
 
 type ConversationProps = InnerProps & withQismoSDKProps;
@@ -27,6 +24,13 @@ class QismoConversation extends React.Component<
 > {
   private messagesEnd: RefObject<any> = createRef();
 
+  constructor(props: ConversationProps) {
+    super(props);
+
+    this.handleDetailMessage = this.handleDetailMessage.bind(this);
+    this.handleDeleteMessage = this.handleDeleteMessage.bind(this);
+  }
+
   componentDidMount() {
     this.scrollToBottom();
   }
@@ -38,17 +42,25 @@ class QismoConversation extends React.Component<
     if (this.props.reload !== prevProps.reload) {
       setTimeout(() => {
         this.forceUpdate();
-      }, 700);
+        this.scrollToBottom();
+      }, 200);
     }
-  }
-
-  componentDidUpdate() {
-    // this.scrollToBottom();
   }
 
   scrollToBottom = () => {
     this.messagesEnd.current.scrollIntoView(false);
   };
+
+  handleDetailMessage() {
+    // tslint:disable-next-line: no-console
+    console.log('handle detail message.');
+  }
+
+  handleDeleteMessage() {
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 200);
+  }
 
   renderBeginning() {
     return (
@@ -61,7 +73,7 @@ class QismoConversation extends React.Component<
   }
   renderButtonMore(firstId: number) {
     return (
-      <Conversation.Info>
+      <Conversation.Info beginning>
         <Conversation.ButtonMore
           color="secondary"
           size="sm"
@@ -82,12 +94,7 @@ class QismoConversation extends React.Component<
   }
 
   render() {
-    const {
-      selected,
-      showPreview,
-      onOpenDetailMessage,
-      onDeleteMessage
-    } = this.props;
+    const { selected } = this.props;
 
     // grouping comments by it's date
     const comments = this._getComments();
@@ -99,45 +106,41 @@ class QismoConversation extends React.Component<
     const isConversationsAll = comments.length > 0 && comments[0].before_id > 0;
 
     return (
-      <Fragment>
+      <Conversation.Index showPreview={!!this.props.activeReplyComment}>
         {isConversationsAll
           ? this.renderButtonMore(comments[0].id)
           : this.renderBeginning()}
-        <Conversation.Index showPreview={showPreview}>
-          {groupingComments &&
-            groupingComments.map((comment, index) => (
-              <Fragment key={index}>
-                <Conversation.Info key={index} beginning>
-                  <Conversation.Date>{comment.key}</Conversation.Date>
-                </Conversation.Info>
-                {comment.values &&
-                  comment.values.map((value, idx) => (
-                    <Comment
-                      key={idx}
-                      index={idx}
-                      comment={value}
-                      commentBefore={
-                        idx - 1 < 0 ? null : comment.values[idx - 1]
-                      }
-                      isLastComment={idx === comment.values.length - 1}
-                      onOpenDetailMessage={() => onOpenDetailMessage()}
-                      onDeleteMessage={() => onDeleteMessage()}
-                      {...this.props}
-                    />
-                  ))}
-              </Fragment>
-            ))}
-          {/* Info */}
-          {selected && selected.isResolved && (
-            <Conversation.Info>
-              <Conversation.Notif>
-                Agent 34 marked this conversation as resolved
-              </Conversation.Notif>
-            </Conversation.Info>
-          )}
-          <div ref={this.messagesEnd} />
-        </Conversation.Index>
-      </Fragment>
+        {groupingComments &&
+          groupingComments.map((comment, index) => (
+            <Fragment key={index}>
+              <Conversation.Info key={index} beginning>
+                <Conversation.Date>{comment.key}</Conversation.Date>
+              </Conversation.Info>
+              {comment.values &&
+                comment.values.map((value, idx) => (
+                  <Comment
+                    key={idx}
+                    index={idx}
+                    comment={value}
+                    commentBefore={idx - 1 < 0 ? null : comment.values[idx - 1]}
+                    isLastComment={idx === comment.values.length - 1}
+                    onOpenDetailMessage={this.handleDetailMessage}
+                    onDeleteMessage={this.handleDeleteMessage}
+                    {...this.props}
+                  />
+                ))}
+            </Fragment>
+          ))}
+        {/* Info */}
+        {selected && selected.isResolved && (
+          <Conversation.Info>
+            <Conversation.Notif>
+              Agent 34 marked this conversation as resolved
+            </Conversation.Notif>
+          </Conversation.Info>
+        )}
+        <div ref={this.messagesEnd} />
+      </Conversation.Index>
     );
   }
 
