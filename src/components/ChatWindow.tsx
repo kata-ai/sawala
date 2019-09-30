@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 
-// import { User } from '../types';
+import { User } from 'types';
 
-import { withQismoSDK, withQismoSDKProps } from '../containers/withQismoSDK';
+import { withQismoSDK, withQismoSDKProps } from 'containers/withQismoSDK';
 
-import Preview from './PreviewUpload';
+import PreviewUpload from './PreviewUpload';
 import Header from './Header';
 import Conversation from './Conversation';
 import Message from './Message';
 
 interface InnerProps {
-  // user: User;
+  user: User;
 }
 
 interface OuterProps extends withQismoSDKProps {}
@@ -21,6 +21,13 @@ export type Props = InnerProps & OuterProps;
 class ChatWindow extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props);
+  }
+
+  componentDidMount() {
+    const { user } = this.props;
+    if (this.props.onInit) {
+      this.props.onInit(user);
+    }
   }
 
   handleSomething(event: any) {
@@ -35,7 +42,7 @@ class ChatWindow extends React.PureComponent<Props> {
 
     return (
       <React.Fragment>
-        <Preview
+        <PreviewUpload
           background={this.props.previewImage}
           onClosed={() => {
             if (this.props.onClearPreview) {

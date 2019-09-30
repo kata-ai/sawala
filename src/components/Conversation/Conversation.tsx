@@ -2,7 +2,7 @@ import React, { createRef, RefObject, Fragment } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { Room as RoomInterface } from '../../types';
+import { Room as RoomInterface } from 'types';
 
 import { Conversation } from './components';
 

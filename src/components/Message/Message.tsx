@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 
-import { withQismoSDKProps } from '../../containers/withQismoSDK';
+import { withQismoSDKProps } from 'containers/withQismoSDK';
 
-import { Room } from '../../types';
+import { Room } from 'types';
 
 import Message from './components';
 
@@ -72,8 +72,6 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
 
   render() {
     const { room, activeReplyComment } = this.props;
-    // tslint:disable-next-line: no-console
-    console.log('message render', activeReplyComment);
     return room ? (
       <Fragment>
         {activeReplyComment && (

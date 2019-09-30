@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Room } from '../../types';
+import { Room } from 'types';
 
 import Header from './components';
 

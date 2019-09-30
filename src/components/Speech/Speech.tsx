@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Comment as CommentInterface, CommentType } from '../../types';
+import { Comment as CommentInterface, CommentType } from 'types';
 
 import Speech from './components';
 

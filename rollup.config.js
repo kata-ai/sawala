@@ -53,9 +53,10 @@ export default {
       }
     }),
     typescript({
-      rollupCommonJSResolveHack: true,
-      exclude: '**/__tests__/**',
-      clean: true
+      rollupCommonJSResolveHack: false,
+      exclude: ['**/__tests__/**', 'node_modules/**/*', 'images/*', 'assets/*'],
+      clean: true,
+      check: false
     }),
     commonjs({
       include: ['node_modules/**'],

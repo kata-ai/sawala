@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import moment from 'moment';
 
-import { Comment as CommentInterface, Auth } from '../../types';
+import { Comment as CommentInterface, Auth } from 'types';
 
 import {
   Dropdown,
@@ -10,7 +10,7 @@ import {
   DropdownItem
 } from '@kata-kit/dropdown';
 
-import { withQismoSDKProps } from '../../containers/withQismoSDK';
+import { withQismoSDKProps } from 'containers/withQismoSDK';
 
 import { Comment } from './components';
 import { Speech } from '../Speech';

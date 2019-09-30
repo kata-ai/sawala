@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Room } from '../../types';
+import { Room } from 'types';
 
 import Preview from './components';
 import { SendIcon, CloseIcon } from 'icons';

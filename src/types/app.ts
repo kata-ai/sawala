@@ -1,11 +1,10 @@
 export type User = {
-  app: AppUser;
-  email: string;
+  id: string;
   password: string;
   displayName: string;
+  app: AppUser;
 };
 
 export type AppUser = {
-  appId: string;
-  token?: string;
+  id: string;
 };

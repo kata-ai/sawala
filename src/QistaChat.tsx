@@ -6,7 +6,6 @@ import ChatWindow from './components/ChatWindow';
 
 export type Props = {
   user: User;
-  appId: string;
 };
 
 export default class QistaChat extends React.PureComponent<Props> {

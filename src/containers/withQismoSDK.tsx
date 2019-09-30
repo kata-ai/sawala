@@ -1,13 +1,7 @@
 import React, { ComponentType, Component, ComponentClass } from 'react';
 import moment from 'moment';
-import QiscusSDKCore from '../libs/SDKCore';
-import {
-  Conversation,
-  Comment,
-  Room,
-  // Qiscus,
-  QiscusCore
-} from '../types';
+import QiscusSDKCore from 'libs/SDKCore';
+import { Conversation, Comment, Room, User, QiscusCore } from 'types';
 
 export type withQismoSDKProps = {
   coreSDK?: QiscusCore;
@@ -16,6 +10,7 @@ export type withQismoSDKProps = {
   conversations?: Conversation[];
   previewImage?: string;
   activeReplyComment?: Comment;
+  onInit?: (user: User) => void;
   onSubmitImage?: (caption?: string) => void;
   onSubmitFile?: (file: File) => void;
   onClearPreview?: () => void;
@@ -36,12 +31,6 @@ interface QiscusSDK {
   activeReplyComment?: Comment;
 }
 
-const APP_ID = 'sdksample';
-const APP_USER = {
-  userId: 'guest@qiscus.com',
-  password: 'password',
-  displayName: 'Guest from Kata.ai'
-};
 const APP_USER_TARGET = 'fikri@qiscus.com';
 const APP_DEFAULT_LIMIT = 100;
 
@@ -56,6 +45,7 @@ export function withQismoSDK(
 
     constructor(props: withQismoSDKProps) {
       super(props);
+      this.handleInit = this.handleInit.bind(this);
       this.handlePreviewImage = this.handlePreviewImage.bind(this);
       this.handleSubmitFile = this.handleSubmitFile.bind(this);
       this.handleSubmitImage = this.handleSubmitImage.bind(this);
@@ -68,35 +58,35 @@ export function withQismoSDK(
       this._setLogin = this._setLogin.bind(this);
       this._chatTarget = this._chatTarget.bind(this);
       this._loadRoomList = this._loadRoomList.bind(this);
-      this._updateConversations = this._updateConversations.bind(this);
+      // this._updateConversations = this._updateConversations.bind(this);
       this._convertToComment = this._convertToComment.bind(this);
     }
 
-    componentWillMount() {
+    handleInit(user: User) {
+      if (this.state.isLogin && this.state.authData) {
+        return;
+      }
       // tslint:disable-next-line: no-console
       console.log('component did mount', QiscusSDKCore);
       window.qiscus.init({
-        AppId: APP_ID,
+        AppId: user.app.id,
         options: {
           loginSuccessCallback: (authData: object) => {
             this._setLogin(!!authData);
             this._setAuthData(authData);
+            // additional action
             this._chatTarget(APP_USER_TARGET);
           },
           newMessagesCallback: (messages: any) => {
             if (messages) {
               // tslint:disable-next-line:no-console
               console.log(`Qiscus newMessagesCallback`, messages);
-              this._updateConversations(messages[0]);
+              // this._updateConversations(messages[0]);
             }
           }
         }
       });
-      window.qiscus.setUser(
-        APP_USER.userId,
-        APP_USER.password,
-        APP_USER.displayName
-      );
+      window.qiscus.setUser(user.id, user.password, user.displayName);
     }
 
     handleSubmitFile(file?: File) {
@@ -189,8 +179,17 @@ export function withQismoSDK(
         const roomId = room.id;
         if (!activeReplyComment) {
           window.qiscus.sendComment(roomId, text).then((response: any) => {
+            const comments = room.comments.concat(response);
+            if (this.state.conversations) {
+              this.setState({ room: { comments } });
+            } else {
+              // this.setState({ conversations: response });
+            }
             // tslint:disable-next-line:no-console
-            console.log('handle submit comment', response);
+            console.log('handle submit comment text', {
+              response,
+              comments
+            });
           });
         } else {
           const payload = {
@@ -208,6 +207,11 @@ export function withQismoSDK(
             .then((response: any) => {
               // tslint:disable-next-line:no-console
               console.log('handle submit reply comment', response);
+              if (this.state.conversations) {
+                this.state.conversations.concat(response);
+              } else {
+                this.setState({ conversations: response });
+              }
             });
         }
       }
@@ -233,6 +237,7 @@ export function withQismoSDK(
       return (
         <WrappedComponent
           coreSDK={QiscusSDKCore}
+          onInit={this.handleInit}
           onPreviewImage={this.handlePreviewImage}
           onSubmitFile={this.handleSubmitFile}
           onSubmitImage={this.handleSubmitImage}
@@ -277,31 +282,31 @@ export function withQismoSDK(
         });
     }
 
-    private _updateConversations(withData: any) {
-      const conversations = this.state.conversations!;
-      const index = conversations.findIndex(conv => {
-        return conv.id === withData.room_id;
-      });
-      if (index > -1) {
-        conversations[index] = Object.assign({}, conversations[index], {
-          ...withData,
-          last_comment_message: withData['message'],
-          avatar: withData['room_avatar'],
-          name: withData['username'],
-          isChannel: false,
-          is_deleted: false,
-          payload: {},
-          room_id: this.state.room!.id
-        });
-      }
+    // private _updateConversations(withData: any) {
+    //   const conversations = this.state.conversations!;
+    //   const index = conversations.findIndex(conv => {
+    //     return conv.id === withData.room_id;
+    //   });
+    //   if (index > -1) {
+    //     conversations[index] = Object.assign({}, conversations[index], {
+    //       ...withData,
+    //       last_comment_message: withData['message'],
+    //       avatar: withData['room_avatar'],
+    //       name: withData['username'],
+    //       isChannel: false,
+    //       is_deleted: false,
+    //       payload: {},
+    //       room_id: this.state.room!.id
+    //     });
+    //   }
 
-      const newComment = {
-        ...withData,
-        ...this._convertToComment(withData)
-      };
-      const comments = { ...this.state.room!.comments, newComment };
-      this.setState({ conversations, room: { comments } });
-    }
+    //   const newComment = {
+    //     ...withData,
+    //     ...this._convertToComment(withData)
+    //   };
+    //   const comments = { ...this.state.room!.comments, newComment };
+    //   this.setState({ conversations, room: { comments } });
+    // }
 
     private _convertToComment(data: any) {
       if (data) {
