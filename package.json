@@ -27,22 +27,8 @@
     "qiscus-sdk-core": "^2.8.33"
   },
   "devDependencies": {
-    "@kata-kit/badge": "^0.7.3",
-    "@kata-kit/banner": "^0.7.2",
     "@kata-kit/button": "^0.7.4",
-    "@kata-kit/card": "^0.7.2",
-    "@kata-kit/common": "^0.7.2",
-    "@kata-kit/dashboard": "^0.7.5",
-    "@kata-kit/drawer": "^0.7.7",
     "@kata-kit/dropdown": "^0.7.4",
-    "@kata-kit/fonts": "^0.7.0",
-    "@kata-kit/form": "^0.7.3",
-    "@kata-kit/layout": "^0.7.5",
-    "@kata-kit/loading": "^0.7.2",
-    "@kata-kit/modal": "^0.7.7",
-    "@kata-kit/reset": "^0.7.2",
-    "@kata-kit/theme": "^0.7.2",
-    "@kata-kit/tooltip": "^0.7.2",
     "@svgr/cli": "^4.3.3",
     "@types/jest": "^24.0.18",
     "@types/lodash-es": "^4.17.3",
@@ -84,7 +70,8 @@
   "module": "build/index.es.js",
   "jsnext:main": "build/index.es.js",
   "files": [
-    "build"
+    "build",
+    "images"
   ],
   "peerDependencies": {
     "react": "^16.0.0",
