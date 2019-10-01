@@ -99,3 +99,30 @@ export type Participant = {
 };
 
 export type Extras = {};
+
+export type RoomType = 'single' | 'group';
+
+export type Room = {
+  id: number;
+  last_comment_id: number;
+  last_comment_message: string;
+  last_comment_message_created_at: Date;
+  avatar: string;
+  name: string;
+  room_type: RoomType;
+  options: string;
+  topics: any[];
+  comments: any[];
+  count_notif: number;
+  isLoaded: boolean;
+  unread_comments: any[];
+  custom_title: null;
+  custom_subtitle: null;
+  unique_id: string;
+  isChannel: boolean;
+  is_resolved?: boolean;
+  type?: ChannelType;
+  participants?: Participant[];
+};
+
+export type ChannelType = 'facebook' | 'line' | 'whatsapp' | 'telegram';

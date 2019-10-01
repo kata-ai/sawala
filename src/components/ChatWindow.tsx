@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import { async } from 'q';
 
-import { User, Selected } from 'types';
+import { User, Selected, QiscusCore, Comment } from 'types';
 
 import { withQismoSDK, withQismoSDKProps } from 'containers/withQismoSDK';
 
@@ -14,7 +15,8 @@ interface InnerProps {
   user: User;
   onClickHeaderDetail: (selected: Selected) => void;
   onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void;
-  onClickDetailComment(comment: Comment): void;
+  onClickDetailComment: (comment: Comment) => void;
+  onRendered: (core: QiscusCore) => void;
 }
 
 interface OuterProps extends withQismoSDKProps {}
@@ -38,10 +40,13 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
     this.handleOpenAssignment = this.handleOpenAssignment.bind(this);
   }
 
-  componentDidMount() {
-    const { user } = this.props;
+  async componentDidMount() {
+    const { user, core } = this.props;
     if (this.props.onInit) {
-      this.props.onInit(user);
+      await this.props.onInit(user);
+      if (core) {
+        this.props.onRendered(core);
+      }
     }
   }
 

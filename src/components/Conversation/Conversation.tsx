@@ -12,7 +12,7 @@ import { Comment } from '../Comment';
 
 interface InnerProps {
   reload: boolean;
-  onClickDetailComment(comment: CommentInterface): void;
+  onClickDetailComment: (comment: CommentInterface) => void;
 }
 
 type ConversationProps = InnerProps & withQismoSDKProps;
@@ -38,8 +38,12 @@ class QismoConversation extends React.Component<
 
   getSnapshotBeforeUpdate(
     prevProps: ConversationProps,
-    prevSate: ConversationProps
+    prevState: ConversationStates
   ) {
+    console.log('getSnapshotBeforeUpdate Conversation', {
+      prevProps,
+      prevState
+    });
     if (this.props.reload !== prevProps.reload) {
       setTimeout(() => {
         this.forceUpdate();
@@ -111,21 +115,21 @@ class QismoConversation extends React.Component<
           ? this.renderButtonMore(comments[0].id)
           : this.renderBeginning()}
         {groupingComments &&
-          groupingComments.map((comments, index) => (
+          groupingComments.map((grouping, index) => (
             <Fragment key={index}>
               <Conversation.Info key={index} beginning>
-                <Conversation.Date>{comments.key}</Conversation.Date>
+                <Conversation.Date>{grouping.key}</Conversation.Date>
               </Conversation.Info>
-              {comments.values &&
-                comments.values.map((comment, idx) => (
+              {grouping.values &&
+                grouping.values.map((comment, idx) => (
                   <Comment
                     key={idx}
                     index={idx}
                     comment={comment}
                     commentBefore={
-                      idx - 1 < 0 ? null : comments.values[idx - 1]
+                      idx - 1 < 0 ? null : grouping.values[idx - 1]
                     }
-                    isLastComment={idx === comments.values.length - 1}
+                    isLastComment={idx === grouping.values.length - 1}
                     onOpenDetailMessage={() =>
                       this.handleDetailMessage(comment)
                     }

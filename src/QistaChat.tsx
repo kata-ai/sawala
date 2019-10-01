@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { User, Selected } from 'types';
+import { User, Selected, QiscusCore, Comment } from 'types';
 
 import { variables } from '@kata-kit/theme';
 
@@ -12,7 +12,8 @@ export type Props = {
   user: User;
   onClickHeaderDetail: (selected: Selected) => void; // when user click 'Chat Details'
   onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void; // when user click 'Assign/Remove Agent'
-  onClickDetailComment(comment: Comment): void; // when user click 'Message Details'
+  onClickDetailComment: (comment: Comment) => void; // when user click 'Message Details'
+  onRendered: (core: QiscusCore) => void; // when qiscus is initiated
 };
 
 const Main = styled.div`

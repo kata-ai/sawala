@@ -1,15 +1,11 @@
 import React, { ComponentType, Component, ComponentClass } from 'react';
-import moment from 'moment';
 import QiscusSDKCore from 'libs/SDKCore';
-import { Conversation, Comment, Room, User, QiscusCore, Selected } from 'types';
+import { Comment, Room, User, QiscusCore, Selected } from 'types';
 
 export type withQismoSDKProps = {
   core?: QiscusCore;
-  selected?: Selected;
+  selected?: Selected | null;
   isLoadingMore?: boolean;
-  isLogin?: boolean;
-  room?: Room;
-  conversations?: Conversation[];
   previewImage?: string;
   activeReplyComment?: Comment;
   onFetchComments?: (firstId: number) => void;
@@ -17,6 +13,7 @@ export type withQismoSDKProps = {
   onSubmitImage?: (caption?: string) => void;
   onSubmitFile?: (file: File) => void;
   onDeleteComment?: (uniqueId: string, isForEveryone: boolean) => void;
+  onChatTarget?: (email: string) => void;
   onClearPreview?: () => void;
   onPreviewImage?: (file: File) => void;
   onSubmitText?: (text: string) => void;
@@ -26,25 +23,18 @@ export type withQismoSDKProps = {
 };
 
 interface QiscusSDK {
-  isLogin: boolean;
   authData: object;
-  room?: Room;
-  conversations?: Conversation[];
   previewImage?: string;
   file?: File;
   activeReplyComment?: Comment;
   isLoadingMore?: boolean;
 }
 
-const APP_USER_TARGET = 'fikri@qiscus.com';
-const APP_DEFAULT_LIMIT = 100;
-
 export function withQismoSDK(
   WrappedComponent: ComponentType<withQismoSDKProps>
 ): ComponentClass<withQismoSDKProps> {
   return class extends Component<withQismoSDKProps> {
     public state: QiscusSDK = {
-      isLogin: false,
       authData: {}
     };
 
@@ -61,40 +51,30 @@ export function withQismoSDK(
       this.handleCloseReplyComment = this.handleCloseReplyComment.bind(this);
       this.handleSetActiveRoom = this.handleSetActiveRoom.bind(this);
       this.handleDeleteComment = this.handleDeleteComment.bind(this);
-      this._setAuthData = this._setAuthData.bind(this);
-      this._setLogin = this._setLogin.bind(this);
-      this._chatTarget = this._chatTarget.bind(this);
-      this._loadRoomList = this._loadRoomList.bind(this);
-      // this._updateConversations = this._updateConversations.bind(this);
-      this._convertToComment = this._convertToComment.bind(this);
+      this.handleChatTarget = this.handleChatTarget.bind(this);
     }
 
-    handleInit(user: User) {
-      if (this.state.isLogin && this.state.authData) {
-        return;
-      }
-      window.qiscus.init({
+    async handleInit(user: User) {
+      if (window.qiscus && window.qiscus.isLogin) return;
+      await window.qiscus.init({
         AppId: user.app.id,
         options: {
-          loginSuccessCallback: (authData: object) => {
-            this._setLogin(!!authData);
-            this._setAuthData(authData);
-            // additional action
-            this._chatTarget(APP_USER_TARGET);
+          // tslint:disable-next-line: no-empty
+          loginSuccessCallback: (authData: any) => {
+            // this.handleChatTarget('fikri@qiscus.com');
           },
-          newMessagesCallback: (messages: any) => {
-            if (messages) {
-              // tslint:disable-next-line:no-console
-              console.log(`Qiscus newMessagesCallback`, messages);
-            }
-          }
+          // tslint:disable-next-line: no-empty
+          newMessagesCallback: (messages: any) => {}
         }
       });
-      window.qiscus.setUser(user.id, user.password, user.displayName);
+      await window.qiscus.setUser(user.id, user.password, user.displayName);
+      await (window.qiscus.UI = {
+        chatTarget: this.handleChatTarget
+      });
     }
 
     handleSubmitFile(file?: File) {
-      const { room } = this.state;
+      const { room } = window.qiscus;
       if (file && room) {
         window.qiscus.upload(
           file,
@@ -136,7 +116,8 @@ export function withQismoSDK(
     }
 
     handleSubmitImage(caption?: string) {
-      const { file, room } = this.state;
+      const { file } = this.state;
+      const { room } = window.qiscus;
       if (file && room) {
         window.qiscus.upload(
           file,
@@ -178,7 +159,8 @@ export function withQismoSDK(
     }
 
     handleSubmitText(text: string) {
-      const { room, activeReplyComment } = this.state;
+      const { activeReplyComment } = this.state;
+      const { room } = window.qiscus;
       if (room) {
         const roomId = room.id;
         if (!activeReplyComment) {
@@ -231,7 +213,7 @@ export function withQismoSDK(
     }
 
     handleDeleteComment(uniqueId: string, isForEveryone: boolean) {
-      const { room } = this.state;
+      const { room } = window.qiscus;
       if (room) {
         window.qiscus
           .deleteComment(room.id, [uniqueId], isForEveryone, true)
@@ -242,11 +224,20 @@ export function withQismoSDK(
       }
     }
 
+    handleChatTarget(email: string) {
+      if (email) {
+        window.qiscus.chatTarget(email).then((response: Selected) => {
+          window.qiscus.selected = response;
+          this.forceUpdate();
+        });
+      }
+    }
+
     render() {
       return (
         <WrappedComponent
           core={QiscusSDKCore}
-          selected={QiscusSDKCore.selected}
+          selected={window.qiscus.selected}
           isLoadingMore={this.state.isLoadingMore}
           onInit={this.handleInit}
           onPreviewImage={this.handlePreviewImage}
@@ -255,10 +246,8 @@ export function withQismoSDK(
           onSubmitFile={this.handleSubmitFile}
           onSubmitImage={this.handleSubmitImage}
           onSubmitText={this.handleSubmitText}
-          room={this.state.room}
+          onChatTarget={this.handleChatTarget}
           activeReplyComment={this.state.activeReplyComment}
-          isLogin={this.state.isLogin}
-          conversations={this.state.conversations}
           previewImage={this.state.previewImage}
           onClearPreview={this.handleClearPreview}
           onReplyCommment={this.handleReplyComment}
@@ -267,90 +256,6 @@ export function withQismoSDK(
           {...this.props}
         />
       );
-    }
-
-    private _setAuthData(authData: object) {
-      this.setState({ authData });
-    }
-
-    private _setLogin(isLogin: boolean) {
-      this.setState({ isLogin });
-    }
-
-    private _chatTarget(userId: string) {
-      window.qiscus.chatTarget(userId).then((room: Room) => {
-        this.setState({ room });
-
-        if (!this.state.conversations) {
-          this._loadRoomList();
-        }
-      });
-    }
-
-    private _loadRoomList() {
-      window.qiscus
-        .loadRoomList({ page: 1, limit: APP_DEFAULT_LIMIT })
-        .then((rooms: any[]) => {
-          this.setState({ conversations: rooms });
-        });
-    }
-
-    // private _updateConversations(withData: any) {
-    //   const conversations = this.state.conversations!;
-    //   const index = conversations.findIndex(conv => {
-    //     return conv.id === withData.room_id;
-    //   });
-    //   if (index > -1) {
-    //     conversations[index] = Object.assign({}, conversations[index], {
-    //       ...withData,
-    //       last_comment_message: withData['message'],
-    //       avatar: withData['room_avatar'],
-    //       name: withData['username'],
-    //       isChannel: false,
-    //       is_deleted: false,
-    //       payload: {},
-    //       room_id: this.state.room!.id
-    //     });
-    //   }
-
-    //   const newComment = {
-    //     ...withData,
-    //     ...this._convertToComment(withData)
-    //   };
-    //   const comments = { ...this.state.room!.comments, newComment };
-    //   this.setState({ conversations, room: { comments } });
-    // }
-
-    private _convertToComment(data: any) {
-      if (data) {
-        return {
-          id: data['id'],
-          avatar: data['room_avatar'],
-          date: moment(data['created_at']).format('YYYY-MM-DD'),
-          time: moment(data['created_at']).format('HH:ss'),
-          message: data['message'],
-          status: data['status'],
-          type: data['type'],
-          username_real: data['email'],
-          username_as: data['username'],
-          attachment: null,
-          before_id: data['comment_before_id'],
-          isRead: false,
-          isChannel: false,
-          isDelivered: true,
-          isFailed: false,
-          isPending: false,
-          isSent: true,
-          is_deleted: false,
-          payload: data['payload'],
-          room_id: data['room_id'],
-          subtype: null,
-          timestamp: data['timestamp'],
-          unique_id: data['unique_temp_id'],
-          unix_timestamp: data['unix_timestamp']
-        };
-      }
-      return {};
     }
 
     private handlePreviewImage(ofFile: File) {
