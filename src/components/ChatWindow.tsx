@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { async } from 'q';
 
 import { User, Selected, QiscusCore, Comment } from 'types';
 
@@ -50,9 +49,9 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
     }
   }
 
-  handleSomething(event: any) {
+  handleSwitchBot(event: any) {
     // tslint:disable-next-line: no-console
-    console.log('handle something here.', event);
+    console.log('handle switch bot.', event);
   }
 
   handleSubmitComment() {
@@ -76,27 +75,34 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
   render() {
     return (
       <React.Fragment>
-        <PreviewUpload
-          background={this.props.previewImage}
-          onClosed={() => {
-            if (this.props.onClearPreview) {
-              this.props.onClearPreview();
-            }
-          }}
-          onSubmitted={(caption?: string) => {
-            if (this.props.onSubmitImage) {
-              this.props.onSubmitImage(caption);
-            }
-          }}
-        />
-        <Header
-          onSwitchBot={this.handleSomething}
-          onOpenDetail={this.handleOpenDetail}
-          onOpenAssignment={this.handleOpenAssignment}
-          {...this.props}
-        />
-        <Conversation reload={this.state.reload} {...this.props} />
-        <Message onSubmitComment={this.handleSubmitComment} {...this.props} />
+        {this.props.selected ? (
+          <React.Fragment>
+            <PreviewUpload
+              background={this.props.previewImage}
+              onClosed={() => {
+                if (this.props.onClearPreview) {
+                  this.props.onClearPreview();
+                }
+              }}
+              onSubmitted={(caption?: string) => {
+                if (this.props.onSubmitImage) {
+                  this.props.onSubmitImage(caption);
+                }
+              }}
+            />
+            <Header
+              onSwitchBot={this.handleSwitchBot}
+              onOpenDetail={this.handleOpenDetail}
+              onOpenAssignment={this.handleOpenAssignment}
+              {...this.props}
+            />
+            <Conversation reload={this.state.reload} {...this.props} />
+            <Message
+              onSubmitComment={this.handleSubmitComment}
+              {...this.props}
+            />
+          </React.Fragment>
+        ) : null}
       </React.Fragment>
     );
   }

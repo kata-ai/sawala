@@ -40,10 +40,6 @@ class QismoConversation extends React.Component<
     prevProps: ConversationProps,
     prevState: ConversationStates
   ) {
-    console.log('getSnapshotBeforeUpdate Conversation', {
-      prevProps,
-      prevState
-    });
     if (this.props.reload !== prevProps.reload) {
       setTimeout(() => {
         this.forceUpdate();

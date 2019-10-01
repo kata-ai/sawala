@@ -45,10 +45,8 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
         },
         {
           label: 'No',
-          onClick: () => {
-            // tslint:disable-next-line: no-console
-            console.log('delete comment cancel.');
-          }
+          // tslint:disable-next-line: no-empty
+          onClick: () => {}
         }
       ]
     });
