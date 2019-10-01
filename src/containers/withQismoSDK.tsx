@@ -1,6 +1,6 @@
 import React, { ComponentType, Component, ComponentClass } from 'react';
 import QiscusSDKCore from 'libs/SDKCore';
-import { Comment, Room, User, QiscusCore, Selected } from 'types';
+import { Comment, User, QiscusCore, Selected } from 'types';
 
 export type withQismoSDKProps = {
   core?: QiscusCore;
@@ -19,7 +19,6 @@ export type withQismoSDKProps = {
   onSubmitText?: (text: string) => void;
   onReplyCommment?: (comment: Comment) => void;
   onCloseReplyCommment?: () => void;
-  onSetActiveRoom?: (room: Room) => void;
 };
 
 interface QiscusSDK {
@@ -49,7 +48,6 @@ export function withQismoSDK(
       this.handleClearPreview = this.handleClearPreview.bind(this);
       this.handleReplyComment = this.handleReplyComment.bind(this);
       this.handleCloseReplyComment = this.handleCloseReplyComment.bind(this);
-      this.handleSetActiveRoom = this.handleSetActiveRoom.bind(this);
       this.handleDeleteComment = this.handleDeleteComment.bind(this);
       this.handleChatTarget = this.handleChatTarget.bind(this);
     }
@@ -74,8 +72,8 @@ export function withQismoSDK(
     }
 
     handleSubmitFile(file?: File) {
-      const { room } = window.qiscus;
-      if (file && room) {
+      const { selected } = window.qiscus;
+      if (file && selected) {
         window.qiscus.upload(
           file,
           (error: Error, progress: ProgressEvent, url: string) => {
@@ -97,7 +95,7 @@ export function withQismoSDK(
                   size: file.size
                 }
               });
-              const roomId = room.id;
+              const roomId = selected.id;
               const text = 'Send Attachment';
               const type = 'custom';
               const timestamp = new Date();
@@ -117,8 +115,8 @@ export function withQismoSDK(
 
     handleSubmitImage(caption?: string) {
       const { file } = this.state;
-      const { room } = window.qiscus;
-      if (file && room) {
+      const { selected } = window.qiscus;
+      if (file && selected) {
         window.qiscus.upload(
           file,
           (error: Error, progress: ProgressEvent, url: string) => {
@@ -141,7 +139,7 @@ export function withQismoSDK(
                   size: file.size
                 }
               });
-              const roomId = room.id;
+              const roomId = selected.id;
               const text = 'Send Image';
               const type = 'custom';
               const timestamp = new Date();
@@ -160,9 +158,9 @@ export function withQismoSDK(
 
     handleSubmitText(text: string) {
       const { activeReplyComment } = this.state;
-      const { room } = window.qiscus;
-      if (room) {
-        const roomId = room.id;
+      const { selected } = window.qiscus;
+      if (selected) {
+        const roomId = selected.id;
         if (!activeReplyComment) {
           window.qiscus.sendComment(roomId, text).then((response: any) => {
             // tslint:disable-next-line:no-console
@@ -208,15 +206,11 @@ export function withQismoSDK(
       });
     }
 
-    handleSetActiveRoom(room: Room) {
-      this.setState({ room });
-    }
-
     handleDeleteComment(uniqueId: string, isForEveryone: boolean) {
-      const { room } = window.qiscus;
-      if (room) {
+      const { selected } = window.qiscus;
+      if (selected) {
         window.qiscus
-          .deleteComment(room.id, [uniqueId], isForEveryone, true)
+          .deleteComment(selected.id, [uniqueId], isForEveryone, true)
           .then((response: any) => {
             // tslint:disable-next-line:no-console
             console.log('delete comment', response);
@@ -254,7 +248,6 @@ export function withQismoSDK(
           onClearPreview={this.handleClearPreview}
           onReplyCommment={this.handleReplyComment}
           onCloseReplyCommment={this.handleCloseReplyComment}
-          onSetActiveRoom={this.handleSetActiveRoom}
           {...this.props}
         />
       );

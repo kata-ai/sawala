@@ -41,11 +41,12 @@ class QismoConversation extends React.Component<
     prevState: ConversationStates
   ) {
     if (this.props.reload !== prevProps.reload) {
-      setTimeout(() => {
+      return setTimeout(() => {
         this.forceUpdate();
         this.scrollToBottom();
       }, 200);
     }
+    return false;
   }
 
   scrollToBottom = () => {
