@@ -19,7 +19,7 @@ export const Index = styled.div<{ showPreview?: boolean }>`
   flex-grow: 1;
   width: 100%;
   height: ${props =>
-    props.showPreview ? 'calc(100% - 232px)' : 'calc(100% - 128px)'};
+    props.showPreview ? 'calc(100% - 224px)' : 'calc(100% - 128px)'};
   padding: 8px 24px;
   margin: 0;
   background-color: ${variables.colors.gray10};

@@ -15,7 +15,7 @@ const fadeInUp = keyframes`
 
 export const Index = styled.div`
   flex-grow: 0;
-  width: 100%;
+  width: calc(100% - 280px);
   height: 64px;
   padding: 0;
   margin: 0;
@@ -26,6 +26,8 @@ export const Index = styled.div`
   align-items: center;
   background-color: #ffffff;
   border-top: 1px solid #e2e6e8;
+  position: absolute;
+  bottom: 0;
 `;
 
 export const Content = styled.div`
@@ -96,10 +98,9 @@ export const Button = styled(KataButton)`
 `;
 
 export const Preview = styled.div<{ show?: boolean }>`
+  bottom: 80px;
   position: absolute;
-  bottom: 64px;
-  right: 0;
-  background-color: #ffffff;
+  background-color: ${variables.colors.white};
   margin-bottom: 0;
   padding: 16px 24px;
   order: 1;

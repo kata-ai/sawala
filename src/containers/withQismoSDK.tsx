@@ -226,9 +226,11 @@ export function withQismoSDK(
 
     handleChatTarget(email: string) {
       if (email) {
-        window.qiscus.chatTarget(email).then((response: Selected) => {
-          window.qiscus.selected = response;
-          this.forceUpdate();
+        window.qiscus.chatTarget(email).then(async (response: Selected) => {
+          await this.setState({
+            activeReplyComment: undefined
+          });
+          await (window.qiscus.selected = response);
         });
       }
     }
