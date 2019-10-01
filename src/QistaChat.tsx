@@ -1,13 +1,18 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { User } from './types';
+import { User, Selected } from 'types';
+
 import { variables } from '@kata-kit/theme';
 
+import { AssignmentType } from 'components/Header';
 import ChatWindow from './components/ChatWindow';
 
 export type Props = {
   user: User;
+  onClickHeaderDetail: (selected: Selected) => void; // when user click 'Chat Details'
+  onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void; // when user click 'Assign/Remove Agent'
+  onClickDetailComment(comment: Comment): void; // when user click 'Message Details'
 };
 
 const Main = styled.div`
@@ -20,10 +25,6 @@ const Main = styled.div`
 `;
 
 export default class QistaChat extends React.PureComponent<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   render() {
     return (
       <Main>

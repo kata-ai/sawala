@@ -12,6 +12,7 @@ import { Comment } from '../Comment';
 
 interface InnerProps {
   reload: boolean;
+  onClickDetailComment(comment: CommentInterface): void;
 }
 
 type ConversationProps = InnerProps & withQismoSDKProps;
@@ -51,9 +52,8 @@ class QismoConversation extends React.Component<
     this.messagesEnd.current.scrollIntoView(false);
   };
 
-  handleDetailMessage() {
-    // tslint:disable-next-line: no-console
-    console.log('handle detail message.');
+  handleDetailMessage(comment: CommentInterface) {
+    this.props.onClickDetailComment(comment);
   }
 
   handleDeleteMessage() {
@@ -111,20 +111,24 @@ class QismoConversation extends React.Component<
           ? this.renderButtonMore(comments[0].id)
           : this.renderBeginning()}
         {groupingComments &&
-          groupingComments.map((comment, index) => (
+          groupingComments.map((comments, index) => (
             <Fragment key={index}>
               <Conversation.Info key={index} beginning>
-                <Conversation.Date>{comment.key}</Conversation.Date>
+                <Conversation.Date>{comments.key}</Conversation.Date>
               </Conversation.Info>
-              {comment.values &&
-                comment.values.map((value, idx) => (
+              {comments.values &&
+                comments.values.map((comment, idx) => (
                   <Comment
                     key={idx}
                     index={idx}
-                    comment={value}
-                    commentBefore={idx - 1 < 0 ? null : comment.values[idx - 1]}
-                    isLastComment={idx === comment.values.length - 1}
-                    onOpenDetailMessage={this.handleDetailMessage}
+                    comment={comment}
+                    commentBefore={
+                      idx - 1 < 0 ? null : comments.values[idx - 1]
+                    }
+                    isLastComment={idx === comments.values.length - 1}
+                    onOpenDetailMessage={() =>
+                      this.handleDetailMessage(comment)
+                    }
                     onDeleteMessage={this.handleDeleteMessage}
                     {...this.props}
                   />

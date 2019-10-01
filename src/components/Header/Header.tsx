@@ -15,10 +15,15 @@ import {
 import { MoreIcon } from 'icons';
 import { AVATAR } from 'default';
 
+export enum AssignmentType {
+  Add = 'add',
+  Remove = 'remove'
+}
+
 interface InnerProps {
   onSwitchBot: Function;
-  onOpenDetail: Function;
-  onOpenAssignment(type: 'add' | 'remove'): void;
+  onOpenDetail: () => void;
+  onOpenAssignment(type: AssignmentType): void;
 }
 
 type HeaderProps = InnerProps & withQismoSDKProps;
@@ -70,10 +75,14 @@ class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
                 <DropdownItem onClick={() => onOpenDetail()}>
                   Chat details
                 </DropdownItem>
-                <DropdownItem onClick={() => onOpenAssignment('add')}>
+                <DropdownItem
+                  onClick={() => onOpenAssignment(AssignmentType.Add)}
+                >
                   Assign agent
                 </DropdownItem>
-                <DropdownItem onClick={() => onOpenAssignment('remove')}>
+                <DropdownItem
+                  onClick={() => onOpenAssignment(AssignmentType.Remove)}
+                >
                   Remove agent
                 </DropdownItem>
               </DropdownMenu>

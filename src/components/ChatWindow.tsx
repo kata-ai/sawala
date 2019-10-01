@@ -1,29 +1,32 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { User } from 'types';
+import { User, Selected } from 'types';
 
 import { withQismoSDK, withQismoSDKProps } from 'containers/withQismoSDK';
 
 import PreviewUpload from './PreviewUpload';
-import Header from './Header';
+import Header, { AssignmentType } from './Header';
 import Conversation from './Conversation';
 import Message from './Message';
 
 interface InnerProps {
   user: User;
+  onClickHeaderDetail: (selected: Selected) => void;
+  onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void;
+  onClickDetailComment(comment: Comment): void;
 }
 
 interface OuterProps extends withQismoSDKProps {}
 
-export type Props = InnerProps & OuterProps;
+export type WindowProps = InnerProps & OuterProps;
 
 type States = {
   reload: boolean;
 };
 
-class ChatWindow extends React.PureComponent<Props, States> {
-  constructor(props: Props) {
+class ChatWindow extends React.PureComponent<WindowProps, States> {
+  constructor(props: WindowProps) {
     super(props);
 
     this.state = {
@@ -31,6 +34,8 @@ class ChatWindow extends React.PureComponent<Props, States> {
     };
 
     this.handleSubmitComment = this.handleSubmitComment.bind(this);
+    this.handleOpenDetail = this.handleOpenDetail.bind(this);
+    this.handleOpenAssignment = this.handleOpenAssignment.bind(this);
   }
 
   componentDidMount() {
@@ -51,10 +56,19 @@ class ChatWindow extends React.PureComponent<Props, States> {
     }));
   }
 
-  render() {
-    // tslint:disable-next-line: no-console
-    console.log('chat window inside here', this.props);
+  handleOpenDetail() {
+    if (this.props.core && this.props.core.selected) {
+      this.props.onClickHeaderDetail(this.props.core.selected);
+    }
+  }
 
+  handleOpenAssignment(type: AssignmentType) {
+    if (this.props.core && this.props.core.selected) {
+      this.props.onClickHeaderAgent(type, this.props.core.selected);
+    }
+  }
+
+  render() {
     return (
       <React.Fragment>
         <PreviewUpload
@@ -72,8 +86,8 @@ class ChatWindow extends React.PureComponent<Props, States> {
         />
         <Header
           onSwitchBot={this.handleSomething}
-          onOpenDetail={this.handleSomething}
-          onOpenAssignment={this.handleSomething}
+          onOpenDetail={this.handleOpenDetail}
+          onOpenAssignment={this.handleOpenAssignment}
           {...this.props}
         />
         <Conversation reload={this.state.reload} {...this.props} />
@@ -83,4 +97,4 @@ class ChatWindow extends React.PureComponent<Props, States> {
   }
 }
 
-export default compose<Props, {}>(withQismoSDK)(ChatWindow);
+export default compose<WindowProps, {}>(withQismoSDK)(ChatWindow);

@@ -117,8 +117,6 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                   type="button"
                   color="secondary"
                   onClick={() => {
-                    // tslint:disable-next-line: no-console
-                    console.log('on click comment left', comment);
                     if (this.props.onReplyCommment) {
                       this.props.onReplyCommment(comment);
                     }

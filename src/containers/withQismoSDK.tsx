@@ -73,8 +73,6 @@ export function withQismoSDK(
       if (this.state.isLogin && this.state.authData) {
         return;
       }
-      // tslint:disable-next-line: no-console
-      console.log('component did mount', QiscusSDKCore);
       window.qiscus.init({
         AppId: user.app.id,
         options: {
