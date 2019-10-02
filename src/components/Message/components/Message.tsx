@@ -62,7 +62,6 @@ export const Textarea = styled.textarea`
   font-size: 13px;
   line-height: 24px;
   border: none;
-  overflow: auto;
   outline: none;
   box-shadow: none;
   resize: none;
@@ -70,6 +69,7 @@ export const Textarea = styled.textarea`
   margin: 6px;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   overflow-y: scroll;
 
   &::placeholder {
