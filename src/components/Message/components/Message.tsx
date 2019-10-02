@@ -69,7 +69,7 @@ export const Textarea = styled.textarea`
   margin: 6px;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: hidden !important;
   overflow-y: scroll;
 
   &::placeholder {
