@@ -143,11 +143,6 @@ export function withQismoSDK(
     handleSubmitText(text: string) {
       const { activeReplyComment } = this.state;
       const { selected } = window.qiscus;
-      console.log('handle submit comment text [1]', {
-        text,
-        selected,
-        activeReplyComment
-      });
       if (selected) {
         const roomId = selected.id;
         if (!activeReplyComment) {

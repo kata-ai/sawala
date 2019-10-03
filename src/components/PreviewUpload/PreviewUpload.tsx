@@ -76,15 +76,6 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
       </Preview.Main>
     );
   }
-
-  private _getPayload(url: string, file: File, caption: string = '') {
-    return JSON.stringify({
-      url,
-      caption,
-      file_name: file.name,
-      size: file.size
-    });
-  }
 }
 
 export default QismoPreviewUpload;
