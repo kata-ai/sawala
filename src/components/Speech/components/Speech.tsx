@@ -16,8 +16,8 @@ export const Image = styled.img`
   margin: 0;
   padding: 0;
   border-radius: 5px;
-  max-height: 300px;
-  max-width: 110px;
+  height: auto;
+  max-width: 152px;
 `;
 
 export const Info = styled.div`

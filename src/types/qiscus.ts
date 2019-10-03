@@ -57,6 +57,11 @@ export type Payload = {
   replied_comment_sender_username?: string;
   replied_comment_type?: string;
   text?: string;
+  // payload custom
+  caption?: string;
+  file_name?: string;
+  size?: string;
+  url?: string;
 };
 
 export type RepliedCommentPayload = {

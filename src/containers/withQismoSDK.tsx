@@ -1,6 +1,6 @@
 import React, { ComponentType, Component, ComponentClass } from 'react';
 import QiscusSDKCore from 'libs/SDKCore';
-import { Comment, User, QiscusCore, Selected } from 'types';
+import { Comment, User, QiscusCore, Selected, CommentType } from 'types';
 
 export type withQismoSDKProps = {
   core?: QiscusCore;
@@ -8,6 +8,7 @@ export type withQismoSDKProps = {
   isLoadingMore?: boolean;
   previewImage?: string;
   activeReplyComment?: Comment;
+  currentFile?: File;
   onFetchComments?: (firstId: number) => void;
   onInit?: (user: User) => void;
   onSubmitImage?: (caption?: string) => void;
@@ -86,18 +87,10 @@ export function withQismoSDK(
               console.log('On progress upload file', progress);
             }
             if (url) {
-              const payload = JSON.stringify({
-                type: 'file',
-                content: {
-                  url,
-                  caption: '',
-                  file_name: file.lastModified,
-                  size: file.size
-                }
-              });
+              const payload = this._getPayload(url, file);
+              const text = `[file] ${url} [/file]`;
               const roomId = selected.id;
-              const text = 'Send Attachment';
-              const type = 'custom';
+              const type = CommentType.FileAttachment;
               const timestamp = new Date();
               const uniqueId = timestamp.getTime();
 
@@ -105,7 +98,7 @@ export function withQismoSDK(
                 .sendComment(roomId, text, uniqueId, type, payload)
                 .then((response: any) => {
                   // tslint:disable-next-line:no-console
-                  console.log('send file finish', response);
+                  this.handleClearPreview();
                 });
             }
           }
@@ -129,19 +122,10 @@ export function withQismoSDK(
               console.log('On progress upload image', progress);
             }
             if (url) {
-              const payload = JSON.stringify({
-                type: 'image',
-                content: {
-                  url,
-                  caption: caption ? caption : '',
-                  text: 'Send Image',
-                  file_name: file.lastModified,
-                  size: file.size
-                }
-              });
+              const payload = this._getPayload(url, file, caption);
+              const text = `[file] ${url} [/file]`;
               const roomId = selected.id;
-              const text = 'Send Image';
-              const type = 'custom';
+              const type = CommentType.FileAttachment;
               const timestamp = new Date();
               const uniqueId = timestamp.getTime();
 
@@ -159,6 +143,11 @@ export function withQismoSDK(
     handleSubmitText(text: string) {
       const { activeReplyComment } = this.state;
       const { selected } = window.qiscus;
+      console.log('handle submit comment text [1]', {
+        text,
+        selected,
+        activeReplyComment
+      });
       if (selected) {
         const roomId = selected.id;
         if (!activeReplyComment) {
@@ -236,6 +225,7 @@ export function withQismoSDK(
           selected={window.qiscus.selected}
           isLoadingMore={this.state.isLoadingMore}
           onInit={this.handleInit}
+          currentFile={this.state.file}
           onPreviewImage={this.handlePreviewImage}
           onFetchComments={this.handleFetchComments}
           onDeleteComment={this.handleDeleteComment}
@@ -264,6 +254,15 @@ export function withQismoSDK(
 
     private handleClearPreview() {
       this.setState({ previewImage: null, file: null });
+    }
+
+    private _getPayload(url: string, file: File, caption: string = '') {
+      return JSON.stringify({
+        url,
+        caption,
+        file_name: file.name,
+        size: file.size
+      });
     }
   };
 }

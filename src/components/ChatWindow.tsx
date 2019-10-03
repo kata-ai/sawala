@@ -78,7 +78,9 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
   render() {
     const {
       previewImage,
+      selected,
       onClearPreview,
+      onPreviewImage,
       onSubmitImage,
       noSelectedComponent
     } = this.props;
@@ -87,21 +89,30 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
     return (
       <React.Fragment>
         <Container>
-          {this.props.selected ? (
+          {selected ? (
             <React.Fragment>
-              <PreviewUpload
-                background={previewImage}
-                onClosed={() => {
-                  if (onClearPreview) {
-                    onClearPreview();
-                  }
-                }}
-                onSubmitted={(caption?: string) => {
-                  if (onSubmitImage) {
-                    onSubmitImage(caption);
-                  }
-                }}
-              />
+              {previewImage && (
+                <PreviewUpload
+                  selected={selected}
+                  background={previewImage}
+                  onClosed={() => {
+                    if (onClearPreview) {
+                      onClearPreview();
+                    }
+                  }}
+                  onChangedImage={(file: File) => {
+                    if (onPreviewImage) {
+                      onPreviewImage(file);
+                    }
+                  }}
+                  onSubmitted={(caption?: string) => {
+                    if (onSubmitImage) {
+                      onSubmitImage(caption);
+                    }
+                  }}
+                />
+              )}
+
               <Header
                 onSwitchBot={this.handleSwitchBot}
                 onOpenDetail={this.handleOpenDetail}

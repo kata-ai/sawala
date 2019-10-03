@@ -6,7 +6,12 @@
     "start": "rollup -c -w",
     "build": "rollup -c",
     "test": "jest",
-    "svgr": "svgr -d src/icons/ assets/ --ext tsx"
+    "svgr": "svgr -d src/icons/ assets/ --ext tsx",
+    "lint": "tslint -c tslint.json -p tsconfig.json 'src/**/*.{ts,tsx}'",
+    "version:patch": "npm version patch && git push -u origin",
+    "version:minor": "npm version minor && git push -u origin",
+    "version:major": "npm version major && git push -u origin",
+    "publish": "npm run build && npm publish"
   },
   "jest": {
     "preset": "ts-jest",

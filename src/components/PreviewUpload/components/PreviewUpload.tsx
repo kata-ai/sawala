@@ -5,8 +5,8 @@ import { Button as KataButton } from '@kata-kit/button';
 export const Main = styled.div<{ background?: string }>`
   position: absolute;
   top: 0;
-  left: 280px;
-  width: 100%;
+  right: 0;
+  width: calc(100% - 280px);
   height: 100%;
   background: ${props =>
     props.background
@@ -35,7 +35,10 @@ export const Header = styled.div`
   color: #666;
   align-items: center;
   margin: 0;
-  width: calc(100% - 280px);
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
 export const HeaderTitle = styled.div`
   align-self: flex-start;
@@ -82,8 +85,11 @@ export const Picker = styled.label`
   display: flex;
   justify-content: center;
   align-content: center;
-  width: calc(100% - 280px);
-  /* margin-left: -280px; */
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: auto;
+  right: auto;
 `;
 export const PickerButton = styled.div`
   border: 1px solid #979797;
@@ -107,11 +113,14 @@ export const Action = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  padding: 20px;
+  padding: 12px 20px;
   background: #fff;
   border-top: 1px solid #e8e8e8;
   color: #666;
-  width: calc(100% - 280px);
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 `;
 export const ActionText = styled.input`
   flex: 1;
