@@ -10,8 +10,7 @@
     "lint": "tslint -c tslint.json -p tsconfig.json 'src/**/*.{ts,tsx}'",
     "version:patch": "npm version patch && git push -u origin",
     "version:minor": "npm version minor && git push -u origin",
-    "version:major": "npm version major && git push -u origin",
-    "publish": "npm run build && npm publish"
+    "version:major": "npm version major && git push -u origin"
   },
   "jest": {
     "preset": "ts-jest",
