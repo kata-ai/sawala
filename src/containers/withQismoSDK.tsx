@@ -29,6 +29,9 @@ export type withQismoSDKProps = {
   onSubmitText?: (text: string) => void;
   onReplyCommment?: (comment: Comment) => void;
   onCloseReplyCommment?: () => void;
+  // callbacks
+  loginSuccessCallback?: (authData: any) => void;
+  newMessagesCallback?: (messages: any) => void;
 };
 
 interface QiscusSDK {
@@ -69,10 +72,15 @@ export function withQismoSDK(
         options: {
           // tslint:disable-next-line: no-empty
           loginSuccessCallback: (authData: any) => {
-            // this.handleChatTarget('fikri@qiscus.com');
+            if (this.props.loginSuccessCallback) {
+              this.props.loginSuccessCallback(authData);
+            }
           },
-          // tslint:disable-next-line: no-empty
-          newMessagesCallback: (messages: any) => {}
+          newMessagesCallback: (messages: any) => {
+            if (this.props.newMessagesCallback) {
+              this.props.newMessagesCallback(messages);
+            }
+          }
         }
       });
       await window.qiscus.setUser(user.id, user.password, user.displayName);

@@ -12,6 +12,9 @@ export type Props = {
   onClickDetailComment: (comment: Comment) => void; // when user click 'Message Details'
   onRendered: (core: QiscusCore) => void; // when qiscus is initiated
   noSelectedComponent?: React.ReactElement; // customize component when no selected room
+  // callbacks
+  loginSuccessCallback?: (authData: any) => void;
+  newMessagesCallback: (messages: any) => void;
 };
 
 export default class QistaChat extends React.PureComponent<Props> {
