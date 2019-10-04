@@ -60,7 +60,7 @@ export type Payload = {
   // payload custom
   caption?: string;
   file_name?: string;
-  size?: string;
+  size?: number;
   url?: string;
 };
 

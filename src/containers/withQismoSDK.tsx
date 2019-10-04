@@ -1,6 +1,15 @@
 import React, { ComponentType, Component, ComponentClass } from 'react';
 import QiscusSDKCore from 'libs/SDKCore';
-import { Comment, User, QiscusCore, Selected, CommentType } from 'types';
+import {
+  Comment,
+  User,
+  QiscusCore,
+  Selected,
+  CommentType,
+  Payload
+} from 'types';
+import { sendComment, uploadFile } from 'libs/utils';
+import { getPayload } from 'libs/utils/response';
 
 export type withQismoSDKProps = {
   core?: QiscusCore;
@@ -73,101 +82,68 @@ export function withQismoSDK(
     }
 
     handleSubmitFile(file?: File) {
-      const { selected } = window.qiscus;
-      if (file && selected) {
-        window.qiscus.upload(
-          file,
-          (error: Error, progress: ProgressEvent, url: string) => {
-            if (error) {
-              // tslint:disable-next-line: no-console
-              console.log('Failed uploading file', error);
-            }
-            if (progress) {
-              // tslint:disable-next-line: no-console
-              console.log('On progress upload file', progress);
-            }
-            if (url) {
-              const payload = this._getPayload(url, file);
-              const text = `[file] ${url} [/file]`;
-              const roomId = selected.id;
-              const type = CommentType.FileAttachment;
-              const timestamp = new Date();
-              const uniqueId = timestamp.getTime();
+      if (file) {
+        // upload file to qiscus server
+        uploadFile(file).then((url: string) => {
+          const text = `[file] ${url} [/file]`;
+          const timestamp = new Date();
+          const uniqueId = timestamp.toDateString();
+          const payload = getPayload(url, file);
+          const type = CommentType.FileAttachment;
 
-              window.qiscus
-                .sendComment(roomId, text, uniqueId, type, payload)
-                .then((response: any) => {
-                  // tslint:disable-next-line:no-console
-                  this.handleClearPreview();
-                });
-            }
-          }
-        );
+          // send comment with image url
+          sendComment(text, uniqueId, type, payload).then(() => {
+            this.handleClearPreview();
+          });
+        });
       }
     }
 
     handleSubmitImage(caption?: string) {
       const { file } = this.state;
-      const { selected } = window.qiscus;
-      if (file && selected) {
-        window.qiscus.upload(
-          file,
-          (error: Error, progress: ProgressEvent, url: string) => {
-            if (error) {
-              // tslint:disable-next-line: no-console
-              console.log('Failed uploading image', error);
-            }
-            if (progress) {
-              // tslint:disable-next-line: no-console
-              console.log('On progress upload image', progress);
-            }
-            if (url) {
-              const payload = this._getPayload(url, file, caption);
-              const text = `[file] ${url} [/file]`;
-              const roomId = selected.id;
-              const type = CommentType.FileAttachment;
-              const timestamp = new Date();
-              const uniqueId = timestamp.getTime();
 
-              window.qiscus
-                .sendComment(roomId, text, uniqueId, type, payload)
-                .then((response: any) => {
-                  this.handleClearPreview();
-                });
-            }
-          }
-        );
+      if (file) {
+        // upload file to qiscus server
+        uploadFile(file).then((url: string) => {
+          const text = `[file] ${url} [/file]`;
+          const timestamp = new Date();
+          const uniqueId = timestamp.toDateString();
+          const payload = getPayload(url, file, caption);
+          const type = CommentType.FileAttachment;
+
+          // send comment with image url
+          sendComment(text, uniqueId, type, payload).then(() => {
+            this.handleClearPreview();
+          });
+        });
       }
     }
 
     handleSubmitText(text: string) {
       const { activeReplyComment } = this.state;
-      const { selected } = window.qiscus;
-      if (selected) {
-        const roomId = selected.id;
-        if (!activeReplyComment) {
-          window.qiscus.sendComment(roomId, text).then((response: any) => {
-            // tslint:disable-next-line:no-console
-            console.log('handle submit comment text', response);
-          });
-        } else {
-          const payload = {
-            text,
-            replied_comment_id: activeReplyComment.id,
-            replied_comment_message: activeReplyComment.message,
-            replied_comment_sender_email: activeReplyComment.username_real,
-            replied_comment_sender_username: activeReplyComment.username_as,
-            replied_comment_payload: null,
-            replied_comment_type: activeReplyComment.type
-          };
-          this.handleCloseReplyComment();
-          window.qiscus
-            .sendComment(roomId, text, null, 'reply', JSON.stringify(payload))
-            .then((response: any) => {
-              // tslint:disable-next-line:no-console
-              console.log('handle submit reply comment', response);
-            });
-        }
+      if (activeReplyComment) {
+        const payload: Partial<Payload> = {
+          text,
+          replied_comment_id: activeReplyComment.id,
+          replied_comment_message: activeReplyComment.message,
+          replied_comment_sender_email: activeReplyComment.username_real,
+          replied_comment_sender_username: activeReplyComment.username_as,
+          replied_comment_payload: activeReplyComment.payload,
+          replied_comment_type: activeReplyComment.type
+        };
+        const type = CommentType.Reply;
+        const timestamp = new Date();
+        const uniqueId = timestamp.toDateString();
+        this.handleCloseReplyComment();
+        sendComment(text, uniqueId, type, payload).then((response: any) => {
+          // tslint:disable-next-line:no-console
+          console.log('handle submit reply comment', response);
+        });
+      } else {
+        sendComment(text).then((response: any) => {
+          // tslint:disable-next-line:no-console
+          console.log('handle submit comment text', response);
+        });
       }
     }
 
@@ -249,15 +225,6 @@ export function withQismoSDK(
 
     private handleClearPreview() {
       this.setState({ previewImage: null, file: null });
-    }
-
-    private _getPayload(url: string, file: File, caption: string = '') {
-      return JSON.stringify({
-        url,
-        caption,
-        file_name: file.name,
-        size: file.size
-      });
     }
   };
 }
