@@ -42,7 +42,7 @@ export default {
   plugins: [
     external(),
     babel({
-      exclude: 'node_modules/**'
+      exclude: ['node_modules/**', 'example/**']
     }),
     resolve({
       preferBuiltins: true
@@ -56,12 +56,19 @@ export default {
     }),
     typescript({
       rollupCommonJSResolveHack: false,
-      exclude: ['**/__tests__/**', 'node_modules/**/*', 'images/*', 'assets/*'],
+      exclude: [
+        '**/__tests__/**',
+        'node_modules/**/*',
+        'images/*',
+        'assets/*',
+        'example/*'
+      ],
       clean: true,
       check: false
     }),
     commonjs({
       include: ['node_modules/**'],
+      exclude: ['example/**'],
       namedExports: {
         'node_modules/react/react.js': [
           'Children',
