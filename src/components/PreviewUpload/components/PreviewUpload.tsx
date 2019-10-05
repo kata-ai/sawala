@@ -3,10 +3,7 @@ import styled, { css } from 'styled-components';
 import { Button as KataButton } from '@kata-kit/button';
 
 export const Main = styled.div<{ background?: string }>`
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: calc(100% - 280px);
+  width: 100%;
   height: 100%;
   background: ${props =>
     props.background
@@ -36,9 +33,6 @@ export const Header = styled.div`
   align-items: center;
   margin: 0;
   width: 100%;
-  position: absolute;
-  top: 0;
-  right: 0;
 `;
 export const HeaderTitle = styled.div`
   align-self: flex-start;
@@ -118,9 +112,6 @@ export const Action = styled.div`
   border-top: 1px solid #e8e8e8;
   color: #666;
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  right: 0;
 `;
 export const ActionText = styled.input`
   flex: 1;
