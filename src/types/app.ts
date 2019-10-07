@@ -3,6 +3,7 @@ export type User = {
   password: string;
   displayName: string;
   app: AppUser;
+  avatar?: string;
 };
 
 export type AppUser = {

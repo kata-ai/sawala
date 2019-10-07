@@ -83,7 +83,12 @@ export function withQismoSDK(
           }
         }
       });
-      await window.qiscus.setUser(user.id, user.password, user.displayName);
+      await window.qiscus.setUser(
+        user.id,
+        user.password,
+        user.displayName,
+        user.avatar
+      );
       await (window.qiscus.UI = {
         chatTarget: this.handleChatTarget
       });
