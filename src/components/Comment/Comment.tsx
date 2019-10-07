@@ -16,7 +16,7 @@ import { withQismoSDKProps } from 'containers/withQismoSDK';
 
 import { Comment } from './components';
 import { Speech } from '../Speech';
-import { MoreIcon, TickIcon, ReplyIcon } from 'icons';
+import { MoreIcon, TickIcon, TicksIcon, ReplyIcon } from 'icons';
 import getAvatar from 'libs/utils/getAvatar';
 import { AVATAR } from 'default';
 
@@ -127,9 +127,13 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
             <Comment.ChatTime position={isMyComment ? 'right' : 'left'}>
               {moment(comment.timestamp).format('HH:ss')}
             </Comment.ChatTime>
-            {isMyComment && (
+            {isMyComment && !comment.isChannel && (
               <Comment.ChatTick>
-                <TickIcon />
+                {comment.isDelivered && comment.isRead ? (
+                  <TicksIcon />
+                ) : (
+                  <TickIcon />
+                )}
               </Comment.ChatTick>
             )}
           </Fragment>
