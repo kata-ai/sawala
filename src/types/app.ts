@@ -9,3 +9,9 @@ export type User = {
 export type AppUser = {
   id: string;
 };
+
+export type AppConfig = {
+  autoConnect: boolean | true;
+  appId: string;
+  user?: User;
+};

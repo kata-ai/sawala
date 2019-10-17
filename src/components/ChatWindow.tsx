@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import styled from 'styled-components';
 
-import { User, Selected, QiscusCore, Comment } from 'types';
+import { Selected, QiscusCore, Comment, AppConfig } from 'types';
 
 import { withQismoSDK, withQismoSDKProps } from 'containers/withQismoSDK';
 
@@ -13,12 +13,12 @@ import Conversation from './Conversation';
 import Message from './Message';
 
 interface InnerProps {
-  user: User;
   onClickHeaderDetail: (selected: Selected) => void;
   onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void;
   onClickDetailComment: (comment: Comment) => void;
   onRendered: (core: QiscusCore) => void;
   noSelectedComponent?: React.ReactElement;
+  config: AppConfig;
 }
 
 interface OuterProps extends withQismoSDKProps {}
@@ -30,6 +30,8 @@ type States = {
 };
 
 class ChatWindow extends React.PureComponent<WindowProps, States> {
+  _isMounted: boolean = false;
+
   constructor(props: WindowProps) {
     super(props);
 
@@ -43,13 +45,18 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
   }
 
   async componentDidMount() {
-    const { user, core, onInit, onRendered } = this.props;
-    if (onInit) {
-      await onInit(user);
+    this._isMounted = true;
+    const { config, core, onInit, onRendered } = this.props;
+    if (onInit && this._isMounted) {
+      await onInit(config);
       if (core) {
         onRendered(core);
       }
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleSwitchBot(event: any) {

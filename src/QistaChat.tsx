@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { User, Selected, QiscusCore, Comment } from 'types';
+import { Selected, QiscusCore, Comment, AppConfig } from 'types';
 
 import { AssignmentType } from 'components/Header';
 import ChatWindow from './components/ChatWindow';
 
 export type Props = {
-  user: User;
   onClickHeaderDetail: (selected: Selected) => void; // when user click 'Chat Details'
   onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void; // when user click 'Assign/Remove Agent'
   onClickDetailComment: (comment: Comment) => void; // when user click 'Message Details'
@@ -15,6 +14,7 @@ export type Props = {
   // callbacks
   loginSuccessCallback?: (authData: any) => void;
   newMessagesCallback: (messages: any) => void;
+  config: AppConfig;
 };
 
 export default class QistaChat extends React.PureComponent<Props> {

@@ -36,11 +36,11 @@ class QismoConversation extends React.Component<
     this.scrollToBottom();
   }
 
-  getSnapshotBeforeUpdate(
+  componentWillReceiveProps(
     prevProps: ConversationProps,
-    prevState: ConversationStates
+    nextProps: ConversationProps
   ) {
-    if (this.props.reload !== prevProps.reload) {
+    if (prevProps.reload !== nextProps.reload) {
       return setTimeout(() => {
         this.forceUpdate();
         this.scrollToBottom();
@@ -149,7 +149,7 @@ class QismoConversation extends React.Component<
     );
   }
 
-  _getComments(): CommentInterface[] {
+  private _getComments(): CommentInterface[] {
     const { selected } = this.props;
     if (selected && selected.comments) {
       return selected.comments;

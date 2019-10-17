@@ -2,11 +2,11 @@ import React, { ComponentType, Component, ComponentClass } from 'react';
 import QiscusSDKCore from 'libs/SDKCore';
 import {
   Comment,
-  User,
   QiscusCore,
   Selected,
   CommentType,
-  Payload
+  Payload,
+  AppConfig
 } from 'types';
 import { sendComment, uploadFile } from 'libs/utils';
 import { getPayload } from 'libs/utils/response';
@@ -19,7 +19,7 @@ export type withQismoSDKProps = {
   activeReplyComment?: Comment;
   currentFile?: File;
   onFetchComments?: (firstId: number) => void;
-  onInit?: (user: User) => void;
+  onInit?: (config: AppConfig) => void;
   onSubmitImage?: (caption?: string) => void;
   onSubmitFile?: (file: File) => void;
   onDeleteComment?: (uniqueId: string, isForEveryone: boolean) => void;
@@ -63,12 +63,13 @@ export function withQismoSDK(
       this.handleCloseReplyComment = this.handleCloseReplyComment.bind(this);
       this.handleDeleteComment = this.handleDeleteComment.bind(this);
       this.handleChatTarget = this.handleChatTarget.bind(this);
+      this.handleSetSelected = this.handleSetSelected.bind(this);
     }
 
-    async handleInit(user: User) {
+    async handleInit(config: AppConfig) {
       if (window.qiscus && window.qiscus.isLogin) return;
       await window.qiscus.init({
-        AppId: user.app.id,
+        AppId: config.appId,
         options: {
           // tslint:disable-next-line: no-empty
           loginSuccessCallback: (authData: any) => {
@@ -83,14 +84,19 @@ export function withQismoSDK(
           }
         }
       });
-      await window.qiscus.setUser(
-        user.id,
-        user.password,
-        user.displayName,
-        user.avatar
-      );
+      // auto setUser when config autoConnect & user is defined
+      if (config.autoConnect && config.user) {
+        const { user } = config;
+        await window.qiscus.setUser(
+          user.id,
+          user.password,
+          user.displayName,
+          user.avatar
+        );
+      }
       await (window.qiscus.UI = {
-        chatTarget: this.handleChatTarget
+        chatTarget: this.handleChatTarget,
+        setSelected: this.handleSetSelected
       });
     }
 
@@ -199,6 +205,15 @@ export function withQismoSDK(
           });
           await (window.qiscus.selected = response);
         });
+      }
+    }
+
+    async handleSetSelected(selected: any) {
+      if (selected) {
+        await this.setState({
+          activeReplyComment: undefined
+        });
+        await (window.qiscus.selected = selected);
       }
     }
 
