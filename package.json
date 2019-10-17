@@ -1,6 +1,6 @@
 {
   "name": "qista",
-  "version": "0.0.13",
+  "version": "0.1.0",
   "description": "a bundle of qiscus-chat-sdk with any kata.ai adaptation for spesific our needed.",
   "scripts": {
     "start": "rollup -c -w",
