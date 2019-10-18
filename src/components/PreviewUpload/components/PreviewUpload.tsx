@@ -3,7 +3,9 @@ import styled, { css } from 'styled-components';
 import { Button as KataButton } from '@kata-kit/button';
 
 export const Main = styled.div<{ background?: string }>`
-  width: 100%;
+  /* todo: next it should possible to wrap in relative position 1ith width 100% */
+  width: calc(100% - 280px);
+  position: absolute;
   height: 100%;
   background: ${props =>
     props.background

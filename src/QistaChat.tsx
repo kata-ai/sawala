@@ -18,7 +18,17 @@ export type Props = {
 };
 
 export default class QistaChat extends React.PureComponent<Props> {
+  _isMount: boolean = false;
+
+  componentDidMount() {
+    this._isMount = true;
+  }
+
+  componentWillUnmount() {
+    this._isMount = false;
+  }
+
   render() {
-    return <ChatWindow {...this.props} />;
+    return this._isMount ? <ChatWindow {...this.props} /> : null;
   }
 }

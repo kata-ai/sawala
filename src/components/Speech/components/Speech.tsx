@@ -6,6 +6,7 @@ export const Box = styled.div`
   overflow: hidden;
   overflow-y: auto;
   word-break: break-all;
+  white-space: pre;
 `;
 
 export const Attachment = styled.div`
