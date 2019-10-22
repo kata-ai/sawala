@@ -76,6 +76,8 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
 
   render() {
     const { activeReplyComment } = this.props;
+    const { rows, value } = this.state;
+    const disabledSend = !value.trim();
     return (
       <Fragment>
         {activeReplyComment && (
@@ -148,8 +150,8 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
           </Message.Action>
           <Message.Comment>
             <Message.Textarea
-              rows={this.state.rows}
-              value={this.state.value}
+              rows={rows}
+              value={value}
               cols={30}
               placeholder="Send a message..."
               onChange={this.handleChangeComment}
@@ -166,8 +168,10 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
 
                 this.handleSubmitText();
               }}
+              // disable send button if text empty or just spaces
+              disabled={disabledSend}
             >
-              <SendIcon />
+              <SendIcon fill={disabledSend ? '#C2C7C8' : '#006FE6'} />
             </Message.Button>
           </Message.Action>
         </Message.Index>
