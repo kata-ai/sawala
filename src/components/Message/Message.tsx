@@ -64,7 +64,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
   };
 
   handleSubmitText() {
-    if (this.props.onSubmitText) {
+    if (this.props.onSubmitText && this._isValidComment()) {
       this.props.onSubmitText(this.state.value);
       this.setState({
         value: '',
@@ -77,7 +77,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
   render() {
     const { activeReplyComment } = this.props;
     const { rows, value } = this.state;
-    const disabledSend = !value.trim();
+    const disabledSend = !this._isValidComment();
     return (
       <Fragment>
         {activeReplyComment && (
@@ -177,6 +177,10 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
         </Message.Index>
       </Fragment>
     );
+  }
+
+  private _isValidComment() {
+    return !!this.state.value.trim();
   }
 }
 
