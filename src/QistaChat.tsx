@@ -9,6 +9,7 @@ export type Props = {
   onClickHeaderDetail: (selected: Selected) => void; // when user click 'Chat Details'
   onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void; // when user click 'Assign/Remove Agent'
   onClickDetailComment: (comment: Comment) => void; // when user click 'Message Details'
+  onClickResolved: (selected: Selected) => void; // when user click 'Resolved' button
   onRendered: (core: QiscusCore) => void; // when qiscus is initiated
   noSelectedComponent?: React.ReactElement; // customize component when no selected room
   // callbacks

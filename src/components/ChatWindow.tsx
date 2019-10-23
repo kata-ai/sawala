@@ -16,6 +16,7 @@ interface InnerProps {
   onClickHeaderDetail: (selected: Selected) => void;
   onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void;
   onClickDetailComment: (comment: Comment) => void;
+  onClickResolved: (selected: Selected) => void;
   onRendered: (core: QiscusCore) => void;
   noSelectedComponent?: React.ReactElement;
   config: AppConfig;
@@ -68,6 +69,12 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
     this.setState(prevState => ({
       reload: !prevState.reload
     }));
+  }
+
+  handleOpenResolved() {
+    if (this.props.core && this.props.core.selected) {
+      this.props.onClickResolved(this.props.core.selected);
+    }
   }
 
   handleOpenDetail() {
@@ -124,6 +131,7 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
                 onSwitchBot={this.handleSwitchBot}
                 onOpenDetail={this.handleOpenDetail}
                 onOpenAssignment={this.handleOpenAssignment}
+                onOpenResolved={this.handleOpenResolved}
                 {...this.props}
               />
               <Conversation reload={reload} {...this.props} />

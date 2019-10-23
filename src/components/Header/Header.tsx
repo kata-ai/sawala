@@ -22,6 +22,7 @@ export enum AssignmentType {
 
 interface InnerProps {
   onSwitchBot: Function;
+  onOpenResolved: () => void;
   onOpenDetail: () => void;
   onOpenAssignment(type: AssignmentType): void;
 }
@@ -31,17 +32,13 @@ type HeaderProps = InnerProps & withQismoSDKProps;
 interface HeaderStates {}
 
 class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
-  submitResolve = (data: any) => {
-    console.log('submit filter', data); // tslint:disable-line
-  };
-
-  openResolve = () => {
-    // tslint:disable-next-line: no-console
-    console.log('handle open resolve here.');
-  };
-
   render() {
-    const { selected, onOpenDetail, onOpenAssignment } = this.props;
+    const {
+      selected,
+      onOpenDetail,
+      onOpenAssignment,
+      onOpenResolved
+    } = this.props;
 
     return selected ? (
       <Header.Header key={selected.id}>
@@ -61,7 +58,7 @@ class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
             <Header.ButtonResolved
               type="button"
               size="sm"
-              onClick={this.openResolve}
+              onClick={() => onOpenResolved()}
             >
               Resolved
             </Header.ButtonResolved>
