@@ -42,6 +42,7 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
 
     this.handleSubmitComment = this.handleSubmitComment.bind(this);
     this.handleOpenDetail = this.handleOpenDetail.bind(this);
+    this.handleOpenResolved = this.handleOpenResolved.bind(this);
     this.handleOpenAssignment = this.handleOpenAssignment.bind(this);
   }
 
