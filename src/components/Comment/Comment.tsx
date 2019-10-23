@@ -17,7 +17,7 @@ import { withQismoSDKProps } from 'containers/withQismoSDK';
 import { Comment } from './components';
 import { Speech } from '../Speech';
 import { MoreIcon, TickIcon, TicksIcon, ReplyIcon } from 'icons';
-import getAvatar from 'libs/utils/getAvatar';
+import { getAvatar } from 'libs/utils';
 import { AVATAR } from 'default';
 
 interface InnerProps {

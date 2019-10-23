@@ -4,7 +4,7 @@ import { withQismoSDKProps } from 'containers/withQismoSDK';
 
 import Header from './components';
 
-import getAvatar from 'libs/utils/getAvatar';
+import { parseAsJSON, getAvatar } from 'libs/utils';
 
 import {
   Dropdown,
@@ -55,13 +55,15 @@ class QismoHeader extends React.Component<HeaderProps, HeaderStates> {
             <Header.UserAlias>{selected.custom_subtitle}</Header.UserAlias>
           </Header.ItemUser>
           <Header.ItemAction>
-            <Header.ButtonResolved
-              type="button"
-              size="sm"
-              onClick={() => onOpenResolved()}
-            >
-              Resolved
-            </Header.ButtonResolved>
+            {!parseAsJSON(selected.options)['is_resolved'] && (
+              <Header.ButtonResolved
+                type="button"
+                size="sm"
+                onClick={() => onOpenResolved()}
+              >
+                Resolved
+              </Header.ButtonResolved>
+            )}
             <Dropdown dropDirection="down">
               <DropdownToggle caret={false}>
                 <Header.Button type="button" color="secondary" size="sm" isIcon>

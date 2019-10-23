@@ -15,11 +15,18 @@ const fadeIn = keyframes`
   }
 `;
 
-export const Index = styled.div<{ showPreview?: boolean }>`
+export const Index = styled.div<{
+  showPreview?: boolean;
+  commentAreaHidden?: boolean;
+}>`
   flex-grow: 1;
   width: 100%;
   height: ${props =>
-    props.showPreview ? 'calc(100% - 208px)' : 'calc(100% - 128px)'};
+    props.showPreview
+      ? 'calc(100% - 208px)'
+      : props.commentAreaHidden
+      ? 'calc(100% - 65px)'
+      : 'calc(100% - 128px)'};
   padding: 8px 24px;
   margin: 0;
   background-color: ${variables.colors.gray10};

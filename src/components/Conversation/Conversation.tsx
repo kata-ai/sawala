@@ -3,6 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { withQismoSDKProps } from 'containers/withQismoSDK';
+import { parseAsJSON } from 'libs/utils';
 
 import { Comment as CommentInterface } from 'types';
 
@@ -72,6 +73,7 @@ class QismoConversation extends React.Component<
       </Conversation.Info>
     );
   }
+
   renderButtonMore(firstId: number) {
     return (
       <Conversation.Info beginning>
@@ -107,7 +109,12 @@ class QismoConversation extends React.Component<
     const isConversationsAll = comments.length > 0 && comments[0].before_id > 0;
 
     return (
-      <Conversation.Index showPreview={!!this.props.activeReplyComment}>
+      <Conversation.Index
+        showPreview={!!this.props.activeReplyComment}
+        commentAreaHidden={
+          selected && parseAsJSON(selected.options)['is_resolved']
+        }
+      >
         {isConversationsAll
           ? this.renderButtonMore(comments[0].id)
           : this.renderBeginning()}

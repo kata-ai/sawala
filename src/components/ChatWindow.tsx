@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Selected, QiscusCore, Comment, AppConfig } from 'types';
 
 import { withQismoSDK, withQismoSDKProps } from 'containers/withQismoSDK';
+import { parseAsJSON } from 'libs/utils';
 
 import { variables } from '@kata-kit/theme';
 import PreviewUpload from './PreviewUpload';
@@ -136,10 +137,12 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
                 {...this.props}
               />
               <Conversation reload={reload} {...this.props} />
-              <Message
-                onSubmitComment={this.handleSubmitComment}
-                {...this.props}
-              />
+              {!parseAsJSON(selected.options)['is_resolved'] && (
+                <Message
+                  onSubmitComment={this.handleSubmitComment}
+                  {...this.props}
+                />
+              )}
             </React.Fragment>
           ) : (
             noSelectedComponent
