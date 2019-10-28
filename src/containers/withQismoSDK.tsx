@@ -18,15 +18,15 @@ export type withQismoSDKProps = {
   previewImage?: string;
   activeReplyComment?: Comment;
   currentFile?: File;
-  onFetchComments?: (firstId: number) => void;
-  onInit?: (config: AppConfig) => void;
+  onFetchComments: (firstId: number) => Promise<any>;
+  onInit: (config: AppConfig) => Promise<boolean>;
   onSubmitImage?: (caption?: string) => void;
   onSubmitFile?: (file: File) => void;
   onDeleteComment?: (uniqueId: string, isForEveryone: boolean) => void;
   onChatTarget?: (email: string) => void;
   onClearPreview?: () => void;
   onPreviewImage?: (file: File) => void;
-  onSubmitText?: (text: string) => void;
+  onSubmitText: (text: string) => Promise<any>;
   onReplyCommment?: (comment: Comment) => void;
   onCloseReplyCommment?: () => void;
   // callbacks
@@ -88,6 +88,7 @@ export function withQismoSDK(
         chatTarget: this.handleChatTarget,
         setSelected: this.handleSetSelected
       };
+      return Promise.resolve(true);
     };
 
     handleSubmitFile = (file?: File) => {
@@ -144,22 +145,25 @@ export function withQismoSDK(
         const timestamp = new Date();
         const uniqueId = timestamp.toDateString();
         this.handleCloseReplyComment();
-        sendComment(text, uniqueId, type, payload).then((response: any) => {
-          // tslint:disable-next-line:no-console
-          console.log('handle submit reply comment', response);
-        });
-      } else {
-        sendComment(text).then((response: any) => {
-          // tslint:disable-next-line:no-console
-          console.log('handle submit comment text', response);
-        });
+        return sendComment(text, uniqueId, type, payload).then(
+          (response: any) => {
+            // tslint:disable-next-line:no-console
+            console.log('handle submit reply comment', response);
+            return Promise.resolve(response);
+          }
+        );
       }
+
+      return sendComment(text).then((response: any) => {
+        return Promise.resolve(response);
+      });
     };
 
     handleFetchComments = (firstId: number) => {
       this.setState({ isLoadingMore: true });
-      window.qiscus.loadMore(firstId).then(() => {
+      return window.qiscus.loadMore(firstId).then((response: any) => {
         this.setState({ isLoadingMore: false });
+        return Promise.resolve(response);
       });
     };
 
@@ -188,17 +192,16 @@ export function withQismoSDK(
     };
 
     handlePreviewImage = (ofFile: File) => {
-      if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
+      // if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
       this.setState({
         previewImage: URL.createObjectURL(ofFile),
         file: ofFile
       });
-      this.forceUpdate();
     };
 
-    handleClearPreview() {
+    handleClearPreview = () => {
       this.setState({ previewImage: null, file: null });
-    }
+    };
 
     render() {
       return (

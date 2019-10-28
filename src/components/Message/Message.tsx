@@ -58,26 +58,31 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
   };
 
   handleKeyDown = (event: any) => {
-    if (event.keyCode === 13 && event.ctrlKey) {
+    if (event.keyCode === 13 && !event.shiftKey) {
       this.handleSubmitText();
     }
   };
 
-  handleSubmitText() {
-    if (this.props.onSubmitText && this._isValidComment()) {
-      this.props.onSubmitText(this.state.value);
-      this.setState({
-        value: '',
-        rows: 1
+  handleSubmitText = () => {
+    if (this.isValidComment()) {
+      this.props.onSubmitText(this.state.value).then(response => {
+        this.setState({
+          value: '',
+          rows: 1
+        });
+        this.props.onSubmitComment();
       });
-      this.props.onSubmitComment();
     }
-  }
+  };
+
+  isValidComment = () => {
+    return !!this.state.value.trim();
+  };
 
   render() {
     const { activeReplyComment } = this.props;
     const { rows, value } = this.state;
-    const disabledSend = !this._isValidComment();
+    const disabledSend = !this.isValidComment();
     return (
       <Fragment>
         {activeReplyComment && (
@@ -177,10 +182,6 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
         </Message.Index>
       </Fragment>
     );
-  }
-
-  private _isValidComment() {
-    return !!this.state.value.trim();
   }
 }
 

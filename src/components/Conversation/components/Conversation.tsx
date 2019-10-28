@@ -39,7 +39,7 @@ export const Content = styled.div`
   padding: 0;
 `;
 
-export const Info = styled.div<{ beginning?: boolean }>`
+export const Info = styled.div<{ beginning?: boolean; animate?: boolean }>`
   margin: 24px 0 8px;
   padding: 4px;
   height: 24px;
@@ -52,6 +52,17 @@ export const Info = styled.div<{ beginning?: boolean }>`
     props.beginning &&
     css`
       margin: 8px 0;
+    `}
+
+  ${props =>
+    props.animate &&
+    css`
+      margin: 8px 0 16px;
+      transition: all 0.3s;
+
+      &:hover {
+        transform: translatey(-2px);
+      }
     `}
 `;
 

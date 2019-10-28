@@ -1,6 +1,6 @@
 import React, { createRef, RefObject, Fragment } from 'react';
-import _ from 'lodash';
 import moment from 'moment';
+import _ from 'lodash';
 
 import { withQismoSDKProps } from 'containers/withQismoSDK';
 import { parseAsJSON } from 'libs/utils';
@@ -24,17 +24,19 @@ class QismoConversation extends React.Component<
   ConversationProps,
   ConversationStates
 > {
+  hasMounted: boolean = false;
+  private messagesTop: RefObject<any> = createRef();
   private messagesEnd: RefObject<any> = createRef();
 
-  constructor(props: ConversationProps) {
-    super(props);
-
-    this.handleDetailMessage = this.handleDetailMessage.bind(this);
-    this.handleDeleteMessage = this.handleDeleteMessage.bind(this);
+  componentDidMount() {
+    if (!this.hasMounted) {
+      this.scrollToBottom();
+    }
+    this.hasMounted = true;
   }
 
-  componentDidMount() {
-    this.scrollToBottom();
+  componentWillUnmount() {
+    this.hasMounted = false;
   }
 
   componentWillReceiveProps(
@@ -47,24 +49,39 @@ class QismoConversation extends React.Component<
         this.scrollToBottom();
       }, 200);
     }
-    return false;
   }
 
-  scrollToBottom = () => {
-    this.messagesEnd.current.scrollIntoView(false);
+  scrollToTop = () => {
+    if (this.messagesTop && this.messagesTop.current) {
+      this.messagesTop.current.scrollIntoView(false);
+    }
   };
 
-  handleDetailMessage(comment: CommentInterface) {
-    this.props.onClickDetailComment(comment);
-  }
+  scrollToBottom = () => {
+    if (this.messagesEnd && this.messagesEnd.current) {
+      this.messagesEnd.current.scrollIntoView(false);
+    }
+  };
 
-  handleDeleteMessage() {
+  handleDetailMessage = (comment: CommentInterface) => {
+    this.props.onClickDetailComment(comment);
+  };
+
+  getComments = (): CommentInterface[] => {
+    const { selected } = this.props;
+    if (selected && selected.comments) {
+      return selected.comments;
+    }
+    return [];
+  };
+
+  handleDeleteMessage = () => {
     setTimeout(() => {
       this.forceUpdate();
     }, 200);
-  }
+  };
 
-  renderBeginning() {
+  renderBeginning = () => {
     return (
       <Conversation.Info beginning>
         <Conversation.Span>
@@ -72,11 +89,11 @@ class QismoConversation extends React.Component<
         </Conversation.Span>
       </Conversation.Info>
     );
-  }
+  };
 
-  renderButtonMore(firstId: number) {
+  renderButtonMore = (firstId: number) => {
     return (
-      <Conversation.Info beginning>
+      <Conversation.Info beginning animate>
         <Conversation.ButtonMore
           color="secondary"
           size="sm"
@@ -84,9 +101,9 @@ class QismoConversation extends React.Component<
             event.preventDefault();
             event.stopPropagation();
 
-            if (this.props.onFetchComments) {
-              this.props.onFetchComments(firstId);
-            }
+            this.props.onFetchComments(firstId).then(() => {
+              this.scrollToTop();
+            });
           }}
           disabled={this.props.isLoadingMore}
         >
@@ -94,13 +111,13 @@ class QismoConversation extends React.Component<
         </Conversation.ButtonMore>
       </Conversation.Info>
     );
-  }
+  };
 
   render() {
     const { selected } = this.props;
 
     // grouping comments by it's date
-    const comments = this._getComments();
+    const comments = this.getComments();
     const groupingComments = _.chain(comments)
       .groupBy(e => moment(e.timestamp).format('dddd, DD MMMM YYYY'))
       .map((values, key) => ({ values, key }))
@@ -115,6 +132,7 @@ class QismoConversation extends React.Component<
           selected && parseAsJSON(selected.options)['is_resolved']
         }
       >
+        <div ref={this.messagesTop} />
         {isConversationsAll
           ? this.renderButtonMore(comments[0].id)
           : this.renderBeginning()}
@@ -143,25 +161,9 @@ class QismoConversation extends React.Component<
                 ))}
             </Fragment>
           ))}
-        {/* Info */}
-        {selected && selected.isResolved && (
-          <Conversation.Info>
-            <Conversation.Notif>
-              Agent 34 marked this conversation as resolved
-            </Conversation.Notif>
-          </Conversation.Info>
-        )}
         <div ref={this.messagesEnd} />
       </Conversation.Index>
     );
-  }
-
-  private _getComments(): CommentInterface[] {
-    const { selected } = this.props;
-    if (selected && selected.comments) {
-      return selected.comments;
-    }
-    return [];
   }
 }
 

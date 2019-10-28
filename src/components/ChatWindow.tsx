@@ -40,14 +40,13 @@ class ChatWindow extends React.Component<WindowProps, States> {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { config, core, onInit, onRendered } = this.props;
-    if (onInit) {
-      await onInit(config);
+    onInit(config).then(() => {
       if (core) {
         onRendered(core);
       }
-    }
+    });
   }
 
   handleSwitchBot = (event: any) => {

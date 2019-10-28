@@ -23,23 +23,29 @@ export const Image = styled.img`
 `;
 
 export const Info = styled.div`
-  margin: 0;
+  margin: 24px 0 8px;
   padding: 4px;
   height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 100%;
 `;
 
-export const System = styled.span`
+export const Span = styled.span`
+  line-height: 24px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #979797;
+  letter-spacing: 0.2px;
+`;
+
+export const System = styled(Span)`
   padding: 0 8px;
-  color: ${variables.colors.gray60};
-  background-color: ${variables.colors.gray30};
+  color: ${variables.colors.gray50};
+  background-color: transparent;
+  border: 1px solid ${variables.colors.gray30};
   border-radius: 2px;
-  font-weight: 400;
-  font-size: 12px;
 `;
 
 export const Reply = styled.div`
