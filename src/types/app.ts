@@ -13,5 +13,5 @@ export type AppUser = {
 export type AppConfig = {
   autoConnect: boolean | true;
   appId: string;
-  user?: User;
+  user?: User | null;
 };

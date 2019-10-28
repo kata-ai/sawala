@@ -31,26 +31,18 @@ type States = {
   reload: boolean;
 };
 
-class ChatWindow extends React.PureComponent<WindowProps, States> {
-  _isMounted: boolean = false;
-
+class ChatWindow extends React.Component<WindowProps, States> {
   constructor(props: WindowProps) {
     super(props);
 
     this.state = {
       reload: false
     };
-
-    this.handleSubmitComment = this.handleSubmitComment.bind(this);
-    this.handleOpenDetail = this.handleOpenDetail.bind(this);
-    this.handleOpenResolved = this.handleOpenResolved.bind(this);
-    this.handleOpenAssignment = this.handleOpenAssignment.bind(this);
   }
 
   async componentDidMount() {
-    this._isMounted = true;
     const { config, core, onInit, onRendered } = this.props;
-    if (onInit && this._isMounted) {
+    if (onInit) {
       await onInit(config);
       if (core) {
         onRendered(core);
@@ -58,38 +50,34 @@ class ChatWindow extends React.PureComponent<WindowProps, States> {
     }
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  handleSwitchBot(event: any) {
+  handleSwitchBot = (event: any) => {
     // tslint:disable-next-line: no-console
     console.log('handle switch bot.', event);
-  }
+  };
 
-  handleSubmitComment() {
+  handleSubmitComment = () => {
     this.setState(prevState => ({
       reload: !prevState.reload
     }));
-  }
+  };
 
-  handleOpenResolved() {
+  handleOpenResolved = () => {
     if (this.props.core && this.props.core.selected) {
       this.props.onClickResolved(this.props.core.selected);
     }
-  }
+  };
 
-  handleOpenDetail() {
+  handleOpenDetail = () => {
     if (this.props.core && this.props.core.selected) {
       this.props.onClickHeaderDetail(this.props.core.selected);
     }
-  }
+  };
 
-  handleOpenAssignment(type: AssignmentType) {
+  handleOpenAssignment = (type: AssignmentType) => {
     if (this.props.core && this.props.core.selected) {
       this.props.onClickHeaderAgent(type, this.props.core.selected);
     }
-  }
+  };
 
   render() {
     const {

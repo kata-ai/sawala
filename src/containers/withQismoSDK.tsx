@@ -52,23 +52,13 @@ export function withQismoSDK(
 
     constructor(props: withQismoSDKProps) {
       super(props);
-      this.handleInit = this.handleInit.bind(this);
-      this.handlePreviewImage = this.handlePreviewImage.bind(this);
-      this.handleSubmitFile = this.handleSubmitFile.bind(this);
-      this.handleSubmitImage = this.handleSubmitImage.bind(this);
-      this.handleSubmitText = this.handleSubmitText.bind(this);
-      this.handleFetchComments = this.handleFetchComments.bind(this);
-      this.handleClearPreview = this.handleClearPreview.bind(this);
-      this.handleReplyComment = this.handleReplyComment.bind(this);
-      this.handleCloseReplyComment = this.handleCloseReplyComment.bind(this);
-      this.handleDeleteComment = this.handleDeleteComment.bind(this);
+
       this.handleChatTarget = this.handleChatTarget.bind(this);
       this.handleSetSelected = this.handleSetSelected.bind(this);
     }
 
-    async handleInit(config: AppConfig) {
-      if (window.qiscus && window.qiscus.isLogin) return;
-      await window.qiscus.init({
+    handleInit = (config: AppConfig) => {
+      window.qiscus.init({
         AppId: config.appId,
         options: {
           // tslint:disable-next-line: no-empty
@@ -87,20 +77,20 @@ export function withQismoSDK(
       // auto setUser when config autoConnect & user is defined
       if (config.autoConnect && config.user) {
         const { user } = config;
-        await window.qiscus.setUser(
+        window.qiscus.setUser(
           user.id,
           user.password,
           user.displayName,
           user.avatar
         );
       }
-      await (window.qiscus.UI = {
+      window.qiscus.UI = {
         chatTarget: this.handleChatTarget,
         setSelected: this.handleSetSelected
-      });
-    }
+      };
+    };
 
-    handleSubmitFile(file?: File) {
+    handleSubmitFile = (file?: File) => {
       if (file) {
         // upload file to qiscus server
         uploadFile(file).then((url: string) => {
@@ -116,9 +106,9 @@ export function withQismoSDK(
           });
         });
       }
-    }
+    };
 
-    handleSubmitImage(caption?: string) {
+    handleSubmitImage = (caption?: string) => {
       const { file } = this.state;
 
       if (file) {
@@ -136,9 +126,9 @@ export function withQismoSDK(
           });
         });
       }
-    }
+    };
 
-    handleSubmitText(text: string) {
+    handleSubmitText = (text: string) => {
       const { activeReplyComment } = this.state;
       if (activeReplyComment) {
         const payload: Partial<Payload> = {
@@ -164,28 +154,28 @@ export function withQismoSDK(
           console.log('handle submit comment text', response);
         });
       }
-    }
+    };
 
-    handleFetchComments(firstId: number) {
+    handleFetchComments = (firstId: number) => {
       this.setState({ isLoadingMore: true });
       window.qiscus.loadMore(firstId).then(() => {
         this.setState({ isLoadingMore: false });
       });
-    }
+    };
 
-    handleReplyComment(comment: Comment) {
+    handleReplyComment = (comment: Comment) => {
       this.setState({
         activeReplyComment: comment
       });
-    }
+    };
 
-    handleCloseReplyComment() {
+    handleCloseReplyComment = () => {
       this.setState({
         activeReplyComment: undefined
       });
-    }
+    };
 
-    handleDeleteComment(uniqueId: string, isForEveryone: boolean) {
+    handleDeleteComment = (uniqueId: string, isForEveryone: boolean) => {
       const { selected } = window.qiscus;
       if (selected) {
         window.qiscus
@@ -195,26 +185,19 @@ export function withQismoSDK(
             console.log('delete comment', response);
           });
       }
-    }
+    };
 
-    handleChatTarget(email: string) {
-      if (email) {
-        window.qiscus.chatTarget(email).then(async (response: Selected) => {
-          await this.setState({
-            activeReplyComment: undefined
-          });
-          await (window.qiscus.selected = response);
-        });
-      }
-    }
+    handlePreviewImage = (ofFile: File) => {
+      if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
+      this.setState({
+        previewImage: URL.createObjectURL(ofFile),
+        file: ofFile
+      });
+      this.forceUpdate();
+    };
 
-    async handleSetSelected(selected: any) {
-      if (selected) {
-        await this.setState({
-          activeReplyComment: undefined
-        });
-        await (window.qiscus.selected = selected);
-      }
+    handleClearPreview() {
+      this.setState({ previewImage: null, file: null });
     }
 
     render() {
@@ -242,17 +225,24 @@ export function withQismoSDK(
       );
     }
 
-    private handlePreviewImage(ofFile: File) {
-      if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
-      this.setState({
-        previewImage: URL.createObjectURL(ofFile),
-        file: ofFile
-      });
-      this.forceUpdate();
+    private handleChatTarget(email: string) {
+      if (email) {
+        window.qiscus.chatTarget(email).then((response: Selected) => {
+          this.setState({
+            activeReplyComment: undefined
+          });
+          window.qiscus.selected = response;
+        });
+      }
     }
 
-    private handleClearPreview() {
-      this.setState({ previewImage: null, file: null });
+    private handleSetSelected(selected: any) {
+      if (selected) {
+        this.setState({
+          activeReplyComment: undefined
+        });
+        window.qiscus.selected = selected;
+      }
     }
   };
 }
