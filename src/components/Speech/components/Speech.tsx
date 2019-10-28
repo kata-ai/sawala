@@ -5,8 +5,9 @@ import { variables } from '@kata-kit/theme';
 export const Box = styled.div`
   overflow: hidden;
   overflow-y: auto;
-  word-break: break-all;
-  white-space: pre;
+  word-break: break-word;
+  word-wrap: break-word;
+  white-space: pre-line;
 `;
 
 export const Attachment = styled.div`
