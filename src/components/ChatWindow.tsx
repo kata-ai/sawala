@@ -98,20 +98,12 @@ class ChatWindow extends React.Component<WindowProps, States> {
                 <PreviewUpload
                   selected={selected}
                   background={previewImage}
-                  onClosed={() => {
-                    if (onClearPreview) {
-                      onClearPreview();
-                    }
-                  }}
-                  onChangedImage={(file: File) => {
-                    if (onPreviewImage) {
-                      onPreviewImage(file);
-                    }
-                  }}
+                  onClosed={onClearPreview}
+                  onChangedImage={onPreviewImage}
                   onSubmitted={(caption?: string) => {
-                    if (onSubmitImage) {
-                      onSubmitImage(caption);
-                    }
+                    onSubmitImage(caption).then(async () => {
+                      await onClearPreview();
+                    });
                   }}
                 />
               )}

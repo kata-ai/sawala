@@ -8,9 +8,9 @@ import { SendIcon, CloseIcon } from 'icons';
 interface PreviewProps {
   selected: Selected;
   background?: string;
-  onClosed(): void;
-  onChangedImage(file: File): void;
-  onSubmitted(caption?: string): void;
+  onClosed: () => void;
+  onChangedImage: (file: File) => void;
+  onSubmitted: (caption?: string) => void;
 }
 
 interface PreviewStates {
@@ -18,10 +18,14 @@ interface PreviewStates {
 }
 
 class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
-  handleKeyDown = (event: any) => {
-    if (event.keyCode === 13 && event.ctrlKey) {
+  handleCaptionChange = (event: any) => {
+    this.setState({ caption: event.target.value });
+  };
+
+  handleCaptionKeyDown = (event: any) => {
+    if (event.keyCode === 13) {
       this.props.onSubmitted(this.state.caption || '');
-      this.setState({ caption: '' });
+      this.setState({ caption: undefined });
     }
   };
 
@@ -48,17 +52,15 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
             type="file"
             accept="image/*"
             onChange={(event: any) => {
-              const file = Array.from(event.currentTarget.files).pop();
+              const file = Array.from(event.target.files).pop();
               this.props.onChangedImage(file as File);
             }}
           />
         </Preview.Picker>
         <Preview.Action>
           <Preview.ActionText
-            onChange={(event: any) => {
-              this.setState({ caption: event.target.value });
-            }}
-            onKeyDown={this.handleKeyDown}
+            onChange={this.handleCaptionChange}
+            onKeyDown={this.handleCaptionKeyDown}
             placeholder="Add your caption..."
           />
           <Preview.ActionButton
@@ -67,7 +69,7 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
             onClick={(event: any) => {
               event.preventDefault();
               this.props.onSubmitted(this.state.caption || '');
-              this.setState({ caption: '' });
+              this.setState({ caption: undefined });
             }}
           >
             <SendIcon />

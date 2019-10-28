@@ -34,14 +34,14 @@ interface CommentStates {}
 type CommentProps = InnerProps & withQismoSDKProps;
 
 class QismoComment extends React.Component<CommentProps, CommentStates> {
-  handleDeleteComment(id: string) {
+  handleDeleteComment = (id: string) => {
     confirmAlert({
       title: 'Delete message',
       message: 'Are you sure want to delete this message?',
       buttons: [
         {
           label: 'Yes',
-          onClick: () => this._confirmDeleteComment(id)
+          onClick: () => this.confirmDeleteComment(id)
         },
         {
           label: 'No',
@@ -50,7 +50,30 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
         }
       ]
     });
+  };
+
+  addDefaultSrc(event: any) {
+    event.target.src = AVATAR;
   }
+
+  isMyComment = (email: string): boolean => {
+    if (this.props.core && this.props.core.userData) {
+      return email === this.props.core.userData.email;
+    }
+    return false;
+  };
+
+  isFirstComment = (username: string): boolean => {
+    return this.props.commentBefore
+      ? username !== this.props.commentBefore.username_real
+      : true;
+  };
+
+  confirmDeleteComment = (id: string) => {
+    this.props.onDeleteComment(id, true).then(() => {
+      this.props.onDeleteMessage();
+    });
+  };
 
   render() {
     const { index, comment, isLastComment, onOpenDetailMessage } = this.props;
@@ -143,30 +166,6 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
       </Comment.Chat>
     );
   }
-
-  private _confirmDeleteComment(id: string) {
-    if (this.props.onDeleteComment) {
-      this.props.onDeleteComment(id, true);
-      this.props.onDeleteMessage();
-    }
-  }
-
-  private addDefaultSrc(event: any) {
-    event.target.src = AVATAR;
-  }
-
-  private isMyComment = (email: string): boolean => {
-    if (this.props.core && this.props.core.userData) {
-      return email === this.props.core.userData.email;
-    }
-    return false;
-  };
-
-  private isFirstComment = (username: string): boolean => {
-    return this.props.commentBefore
-      ? username !== this.props.commentBefore.username_real
-      : true;
-  };
 }
 
 export default QismoComment;

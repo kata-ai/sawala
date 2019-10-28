@@ -113,6 +113,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
               type="button"
               color="secondary"
               onClick={(e: any) => {
+                e.preventDefault();
                 e.stopPropagation();
                 document.getElementById('btn-file')!.click();
               }}
@@ -123,6 +124,7 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
               type="button"
               color="secondary"
               onClick={(e: any) => {
+                e.preventDefault();
                 e.stopPropagation();
                 document.getElementById('btn-image')!.click();
               }}
@@ -135,8 +137,8 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
               accept="image/*"
               style={{ display: 'none' }}
               onChange={(event: any) => {
-                const file = Array.from(event.currentTarget.files).pop();
-                if (this.props.onPreviewImage) {
+                const file = Array.from(event.target.files).pop();
+                if (file) {
                   this.props.onPreviewImage(file as File);
                 }
               }}
@@ -146,8 +148,8 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
               id="btn-file"
               style={{ display: 'none' }}
               onChange={(event: any) => {
-                const file = Array.from(event.currentTarget.files).pop();
-                if (this.props.onSubmitFile) {
+                const file = Array.from(event.target.files).pop();
+                if (file) {
                   this.props.onSubmitFile(file as File);
                 }
               }}

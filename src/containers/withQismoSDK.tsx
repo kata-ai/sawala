@@ -20,12 +20,12 @@ export type withQismoSDKProps = {
   currentFile?: File;
   onFetchComments: (firstId: number) => Promise<any>;
   onInit: (config: AppConfig) => Promise<boolean>;
-  onSubmitImage?: (caption?: string) => void;
-  onSubmitFile?: (file: File) => void;
-  onDeleteComment?: (uniqueId: string, isForEveryone: boolean) => void;
+  onSubmitImage: (caption?: string) => Promise<any>;
+  onSubmitFile: (file: File) => void;
+  onDeleteComment: (uniqueId: string, isForEveryone: boolean) => Promise<any>;
   onChatTarget?: (email: string) => void;
-  onClearPreview?: () => void;
-  onPreviewImage?: (file: File) => void;
+  onClearPreview: () => void;
+  onPreviewImage: (file: File) => void;
   onSubmitText: (text: string) => Promise<any>;
   onReplyCommment?: (comment: Comment) => void;
   onCloseReplyCommment?: () => void;
@@ -114,7 +114,7 @@ export function withQismoSDK(
 
       if (file) {
         // upload file to qiscus server
-        uploadFile(file).then((url: string) => {
+        return uploadFile(file).then((url: string) => {
           const text = `[file] ${url} [/file]`;
           const timestamp = new Date();
           const uniqueId = timestamp.toDateString();
@@ -122,9 +122,11 @@ export function withQismoSDK(
           const type = CommentType.FileAttachment;
 
           // send comment with image url
-          sendComment(text, uniqueId, type, payload).then(() => {
-            this.handleClearPreview();
-          });
+          return sendComment(text, uniqueId, type, payload).then(
+            (response: any) => {
+              return Promise.resolve(response);
+            }
+          );
         });
       }
     };
@@ -147,8 +149,6 @@ export function withQismoSDK(
         this.handleCloseReplyComment();
         return sendComment(text, uniqueId, type, payload).then(
           (response: any) => {
-            // tslint:disable-next-line:no-console
-            console.log('handle submit reply comment', response);
             return Promise.resolve(response);
           }
         );
@@ -182,17 +182,16 @@ export function withQismoSDK(
     handleDeleteComment = (uniqueId: string, isForEveryone: boolean) => {
       const { selected } = window.qiscus;
       if (selected) {
-        window.qiscus
+        return window.qiscus
           .deleteComment(selected.id, [uniqueId], isForEveryone, true)
           .then((response: any) => {
-            // tslint:disable-next-line:no-console
-            console.log('delete comment', response);
+            return Promise.resolve(response);
           });
       }
     };
 
     handlePreviewImage = (ofFile: File) => {
-      // if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
+      if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
       this.setState({
         previewImage: URL.createObjectURL(ofFile),
         file: ofFile
@@ -200,7 +199,11 @@ export function withQismoSDK(
     };
 
     handleClearPreview = () => {
-      this.setState({ previewImage: null, file: null });
+      this.setState({
+        previewImage: undefined,
+        file: undefined
+      });
+      if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
     };
 
     render() {
