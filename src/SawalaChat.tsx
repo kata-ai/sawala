@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Selected, QiscusCore, Comment, AppConfig } from 'types';
 
-import { AssignmentType } from 'components/Header';
 import ChatWindow from './components/ChatWindow';
+import { AssignmentType } from 'components/Header';
 
 export type Props = {
   onClickHeaderDetail: (selected: Selected) => void; // when user click 'Chat Details'
@@ -18,7 +18,7 @@ export type Props = {
   config: AppConfig;
 };
 
-export default class QistaChat extends React.PureComponent<Props> {
+export default class SawalaChat extends React.PureComponent<Props> {
   render() {
     return <ChatWindow {...this.props} />;
   }

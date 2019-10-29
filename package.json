@@ -27,7 +27,7 @@
     "typescript"
   ],
   "author": "Kata.ai <dev@kata.ai>",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "homepage": "https://github.com/kata-ai/sawala/blob/master/README.md",
   "devDependencies": {
     "@svgr/cli": "^4.3.3",
