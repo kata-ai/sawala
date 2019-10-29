@@ -100,7 +100,7 @@ class ChatWindow extends React.Component<WindowProps, States> {
                   background={previewImage}
                   onClosed={onClearPreview}
                   onChangedImage={onPreviewImage}
-                  onSubmitted={(caption?: string) => {
+                  onSubmitted={(caption: string) => {
                     onSubmitImage(caption).then(async () => {
                       await onClearPreview();
                     });

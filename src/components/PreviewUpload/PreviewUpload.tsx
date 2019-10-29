@@ -10,22 +10,29 @@ interface PreviewProps {
   background?: string;
   onClosed: () => void;
   onChangedImage: (file: File) => void;
-  onSubmitted: (caption?: string) => void;
+  onSubmitted: (caption: string) => void;
 }
 
 interface PreviewStates {
-  caption?: string;
+  caption: string;
 }
 
 class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
+  constructor(props: PreviewProps) {
+    super(props);
+
+    this.state = {
+      caption: ''
+    };
+  }
   handleCaptionChange = (event: any) => {
     this.setState({ caption: event.target.value });
   };
 
   handleCaptionKeyDown = (event: any) => {
     if (event.keyCode === 13) {
-      this.props.onSubmitted(this.state.caption || '');
-      this.setState({ caption: undefined });
+      this.props.onSubmitted(this.state.caption);
+      this.setState({ caption: '' });
     }
   };
 
@@ -69,7 +76,7 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
             onClick={(event: any) => {
               event.preventDefault();
               this.props.onSubmitted(this.state.caption || '');
-              this.setState({ caption: undefined });
+              this.setState({ caption: '' });
             }}
           >
             <SendIcon />

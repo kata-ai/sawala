@@ -2,12 +2,12 @@ import { ErrorMessageCode } from 'types';
 import { getErrorMessage } from 'libs/utils/response';
 import { MESSAGE } from 'default';
 
-export default function uploadFile(file?: File) {
+export default async function uploadFile(file?: File) {
   const { selected } = window.qiscus;
   if (file && selected && window.qiscus) {
     return window.qiscus.upload(
       file,
-      (error: Error, progress: ProgressEvent, url: string) => {
+      async (error: Error, progress: ProgressEvent, url: string) => {
         if (error) {
           return Promise.reject(
             getErrorMessage(error.message, ErrorMessageCode.BadRequest, error)

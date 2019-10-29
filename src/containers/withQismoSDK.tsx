@@ -20,9 +20,9 @@ export type withQismoSDKProps = {
   currentFile?: File;
   onFetchComments: (firstId: number) => Promise<any>;
   onInit: (config: AppConfig) => Promise<boolean>;
-  onSubmitImage: (caption?: string) => Promise<any>;
+  onSubmitImage: (caption: string) => Promise<any>;
   onSubmitFile: (file: File) => void;
-  onDeleteComment: (uniqueId: string, isForEveryone: boolean) => Promise<any>;
+  onDeleteComment: (id: string, isForEveryone: boolean) => Promise<any>;
   onChatTarget?: (email: string) => void;
   onClearPreview: () => void;
   onPreviewImage: (file: File) => void;
@@ -96,8 +96,7 @@ export function withQismoSDK(
         // upload file to qiscus server
         uploadFile(file).then((url: string) => {
           const text = `[file] ${url} [/file]`;
-          const timestamp = new Date();
-          const uniqueId = timestamp.toDateString();
+          const uniqueId = null;
           const payload = getPayload(url, file);
           const type = CommentType.FileAttachment;
 
@@ -109,21 +108,20 @@ export function withQismoSDK(
       }
     };
 
-    handleSubmitImage = (caption?: string) => {
+    handleSubmitImage = async (caption: string) => {
       const { file } = this.state;
 
       if (file) {
         // upload file to qiscus server
-        return uploadFile(file).then((url: string) => {
+        return uploadFile(file).then(async (url: string) => {
           const text = `[file] ${url} [/file]`;
-          const timestamp = new Date();
-          const uniqueId = timestamp.toDateString();
-          const payload = getPayload(url, file, caption);
+          const uniqueId = null;
+          const payload = await getPayload(url, file, caption);
           const type = CommentType.FileAttachment;
 
           // send comment with image url
           return sendComment(text, uniqueId, type, payload).then(
-            (response: any) => {
+            async (response: any) => {
               return Promise.resolve(response);
             }
           );
@@ -144,8 +142,7 @@ export function withQismoSDK(
           replied_comment_type: activeReplyComment.type
         };
         const type = CommentType.Reply;
-        const timestamp = new Date();
-        const uniqueId = timestamp.toDateString();
+        const uniqueId = null;
         this.handleCloseReplyComment();
         return sendComment(text, uniqueId, type, payload).then(
           (response: any) => {
@@ -179,11 +176,11 @@ export function withQismoSDK(
       });
     };
 
-    handleDeleteComment = (uniqueId: string, isForEveryone: boolean) => {
+    handleDeleteComment = (id: string, isForEveryone: boolean) => {
       const { selected } = window.qiscus;
       if (selected) {
         return window.qiscus
-          .deleteComment(selected.id, [uniqueId], isForEveryone, true)
+          .deleteComment(selected.id, [id], isForEveryone, true)
           .then((response: any) => {
             return Promise.resolve(response);
           });

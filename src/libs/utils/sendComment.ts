@@ -4,7 +4,7 @@ import { MESSAGE } from 'default';
 
 export default function sendComment(
   text: string,
-  uniqueId: string = '',
+  uniqueId: string | null = null,
   type: CommentType = CommentType.Text,
   payload: Partial<Payload> = {}
 ) {
