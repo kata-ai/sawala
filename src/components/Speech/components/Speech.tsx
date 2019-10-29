@@ -14,6 +14,30 @@ export const Attachment = styled.div`
   padding: 4px;
 `;
 
+export const AttachmentFile = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 8px;
+  color: ${variables.colors.gray60};
+  background-color: ${variables.colors.gray10};
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+
+  svg {
+    margin-right: 8px;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    text-decoration: none;
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
 export const Image = styled.img`
   margin: 0;
   padding: 0;

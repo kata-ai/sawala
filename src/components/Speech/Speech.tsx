@@ -4,6 +4,8 @@ import { Comment as CommentInterface, CommentType } from 'types';
 
 import Speech from './components';
 
+import { FileIcon } from 'icons';
+
 interface SpeechProps {
   comment: CommentInterface;
 }
@@ -62,28 +64,29 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
 
   // when comment type is file_attachment
   private renderFileAttachment = () => {
+    const {
+      payload: { url, ...payload }
+    } = this.props.comment;
     if (this.typeOfCommentIs(CommentType.FileAttachment)) {
       return (
-        this.props.comment.payload &&
-        this.props.comment.payload.url && (
+        payload &&
+        url && (
           <Fragment>
-            {this.isImage(this.props.comment.payload.url) ? (
+            {this.isImage(url) ? (
               <Speech.Attachment>
-                <Speech.Image
-                  src={this.props.comment.payload.url}
-                  alt="image"
-                />
+                <Speech.Image src={url} alt="image" />
               </Speech.Attachment>
             ) : (
-              this.props.comment.payload.file_name && (
+              payload.file_name && (
                 <Speech.Attachment>
-                  {this.props.comment.payload.file_name}
+                  <Speech.AttachmentFile href={url} target="_blank">
+                    <FileIcon />
+                    {payload.file_name}
+                  </Speech.AttachmentFile>
                 </Speech.Attachment>
               )
             )}
-            {this.props.comment.payload.caption && (
-              <p>{this.props.comment.payload.caption}</p>
-            )}
+            {payload.caption && <p>{payload.caption}</p>}
           </Fragment>
         )
       );
