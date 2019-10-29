@@ -1,6 +1,6 @@
 {
   "name": "sawala",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "a bundle of qiscus-chat-sdk with any kata.ai adaptation for spesific our needed.",
   "scripts": {
     "start": "rollup -c -w",
