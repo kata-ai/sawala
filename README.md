@@ -36,7 +36,7 @@ Sawala is built in React, you can use it like this example:
 
 ```jsx
 import * as React from 'react';
-import { QistaChat } from 'qista-test';
+import { SawalaChat } from 'sawala';
 import { EmptyMessage } from '@kata-kit/common';
 
 export default class CmsContainer extends React.Component<Props> {
@@ -53,15 +53,16 @@ export default class CmsContainer extends React.Component<Props> {
 
   render() {
     return (
-      <QistaChat
+      <SawalaChat
         config={{
           autoConnect: true,
           appId: 'sdksample',
           user: {
             id: 'rohmad@kata.ai',
-            password: 'q1w2e3r4';
+            password: 'q1w2e3r4',
             displayName: 'Rohmad from Kata.ai',
-            avatar: 'https://qiscuss3.s3.amazonaws.com/uploads/55c0c6ee486be6b686d52e5b9bbedbbf/2.png'
+            avatar:
+              'https://qiscuss3.s3.amazonaws.com/uploads/55c0c6ee486be6b686d52e5b9bbedbbf/2.png'
           }
         }}
         onClickHeaderDetail={this.handleClickHeaderDetail}
@@ -73,7 +74,7 @@ export default class CmsContainer extends React.Component<Props> {
         loginSuccessCallback={this.handleloginSuccessCallback}
         newMessagesCallback={this.handlenewMessagesCallback}
       />
-    )
+    );
   }
 }
 ```
@@ -82,7 +83,7 @@ export default class CmsContainer extends React.Component<Props> {
 
 By default, the root level of this repo, as well as the demo site, are licensed under the [Apache 2.0 license](LICENSE). While most components use the same license, please note that some packages (like our assets package) may use a different license. Any overriding licenses for each package will be mentioned in the `LICENSE` file located at the root of each package.
 
-Copyright (c) 2018 Kata.ai and/or contributors. All rights reserved.
+Copyright (c) 2019 Kata.ai and/or contributors. All rights reserved.
 
 ## Maintainers
 
