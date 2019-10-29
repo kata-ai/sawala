@@ -71,6 +71,7 @@ export const Notif = styled(Span)`
 `;
 
 export const ChatAction = styled.div<{ position: 'left' | 'right' }>`
+  margin: 0;
   display: none;
   z-index: 5;
   margin-left: ${props => (props.position === 'left' ? '8px' : 0)};
@@ -127,6 +128,7 @@ export const Chat = styled.div<{
   position?: 'left' | 'right';
   inactive?: boolean;
   isSystem?: boolean;
+  hideMenuOnHover?: boolean;
 }>`
   width: 50wh;
   padding: 4px 0;

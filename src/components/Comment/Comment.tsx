@@ -19,6 +19,7 @@ import { Speech } from '../Speech';
 import { MoreIcon, TickIcon, TicksIcon, ReplyIcon } from 'icons';
 import { getAvatar } from 'libs/utils';
 import { AVATAR } from 'default';
+import { FEATURE_COMMENT_REPLY, FEATURE_COMMENT_DELETE } from 'featureFlags';
 
 interface InnerProps {
   index: number;
@@ -86,6 +87,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
         position={isMyComment ? 'right' : 'left'}
         first={isFirstComment}
         isSystem={comment.type === 'system_event'}
+        hideMenuOnHover={FEATURE_COMMENT_REPLY}
       >
         {comment.type !== 'system_event' ? (
           <Fragment>
@@ -112,39 +114,45 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
                     </Comment.Button>
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-menu">
-                    <DropdownItem
-                      onClick={() => {
-                        if (this.props.onReplyCommment) {
-                          this.props.onReplyCommment(comment);
+                    {FEATURE_COMMENT_REPLY && (
+                      <DropdownItem
+                        onClick={() => {
+                          if (this.props.onReplyCommment) {
+                            this.props.onReplyCommment(comment);
+                          }
+                        }}
+                      >
+                        Reply
+                      </DropdownItem>
+                    )}
+                    {FEATURE_COMMENT_DELETE && (
+                      <DropdownItem
+                        onClick={() =>
+                          this.handleDeleteComment(comment.unique_id)
                         }
-                      }}
-                    >
-                      Reply
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={() =>
-                        this.handleDeleteComment(comment.unique_id)
-                      }
-                    >
-                      Delete
-                    </DropdownItem>
+                      >
+                        Delete
+                      </DropdownItem>
+                    )}
                     <DropdownItem onClick={() => onOpenDetailMessage()}>
                       Message Details
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               ) : (
-                <Comment.Button
-                  type="button"
-                  color="secondary"
-                  onClick={() => {
-                    if (this.props.onReplyCommment) {
-                      this.props.onReplyCommment(comment);
-                    }
-                  }}
-                >
-                  <ReplyIcon />
-                </Comment.Button>
+                FEATURE_COMMENT_REPLY && (
+                  <Comment.Button
+                    type="button"
+                    color="secondary"
+                    onClick={() => {
+                      if (this.props.onReplyCommment) {
+                        this.props.onReplyCommment(comment);
+                      }
+                    }}
+                  >
+                    <ReplyIcon />
+                  </Comment.Button>
+                )
               )}
             </Comment.ChatAction>
             <Comment.ChatTime position={isMyComment ? 'right' : 'left'}>
