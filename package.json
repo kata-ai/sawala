@@ -1,5 +1,5 @@
 {
-  "name": "qista",
+  "name": "sawala",
   "version": "0.2.0",
   "description": "a bundle of qiscus-chat-sdk with any kata.ai adaptation for spesific our needed.",
   "scripts": {
@@ -18,15 +18,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/yesboss/qista.git"
+    "url": "git+https://github.com/kata-ai/sawala.git"
   },
   "keywords": [
     "chat-sdk",
-    "wrapper"
+    "kata",
+    "react",
+    "typescript"
   ],
   "author": "Kata.ai <dev@kata.ai>",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/yesboss/qista#readme",
+  "homepage": "https://github.com/kata-ai/sawala/blob/master/README.md",
   "devDependencies": {
     "@svgr/cli": "^4.3.3",
     "@types/jest": "^24.0.18",
