@@ -39,21 +39,22 @@ class QismoConversation extends React.Component<
     this.hasMounted = false;
   }
 
-  componentWillReceiveProps(
+  componentDidUpdate(
     prevProps: ConversationProps,
-    nextProps: ConversationProps
+    prevState: ConversationStates
   ) {
-    if (prevProps.reload !== nextProps.reload) {
+    if (prevProps.reload !== this.props.reload) {
       return setTimeout(() => {
-        this.forceUpdate();
-        this.scrollToBottom();
+        if (!this.props.isLoadingMore) {
+          this.scrollToBottom();
+        }
       }, 200);
     }
   }
 
   scrollToTop = () => {
     if (this.messagesTop && this.messagesTop.current) {
-      this.messagesTop.current.scrollIntoView(false);
+      this.messagesTop.current.scrollTo(0, 0);
     }
   };
 
