@@ -39,13 +39,24 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
 
     // when comment text is [file] url [/file]
     if (this.typeOfCommentIs(CommentType.Text)) {
-      if (image && this.isImage(image)) {
+      if (image) {
+        if (this.isImage(image)) {
+          return (
+            <Fragment>
+              <Speech.Attachment>
+                <Speech.Image src={image} alt="image" />
+              </Speech.Attachment>
+            </Fragment>
+          );
+        }
+
         return (
-          <Fragment>
-            <Speech.Attachment>
-              <Speech.Image src={image} alt="image" />
-            </Speech.Attachment>
-          </Fragment>
+          <Speech.Attachment>
+            <Speech.AttachmentFile href={image} target="_blank">
+              <FileIcon />
+              {this.getFileName(image)}
+            </Speech.AttachmentFile>
+          </Speech.Attachment>
         );
       }
       return <p>{message}</p>;
@@ -64,22 +75,20 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
 
   // when comment type is file_attachment
   private renderFileAttachment = () => {
-    const {
-      payload: { url, ...payload }
-    } = this.props.comment;
+    const { payload } = this.props.comment;
     if (this.typeOfCommentIs(CommentType.FileAttachment)) {
       return (
         payload &&
-        url && (
+        payload.url && (
           <Fragment>
-            {this.isImage(url) ? (
+            {this.isImage(payload.url) ? (
               <Speech.Attachment>
-                <Speech.Image src={url} alt="image" />
+                <Speech.Image src={payload.url} alt={payload.file_name} />
               </Speech.Attachment>
             ) : (
               payload.file_name && (
                 <Speech.Attachment>
-                  <Speech.AttachmentFile href={url} target="_blank">
+                  <Speech.AttachmentFile href={payload.url} target="_blank">
                     <FileIcon />
                     {payload.file_name}
                   </Speech.AttachmentFile>
@@ -183,6 +192,13 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
 
   private typeOfCommentIs = (type: CommentType) => {
     return this.props.comment.type === type;
+  };
+
+  private getFileName = (path: string) => {
+    if (path) {
+      return path.substring(path.lastIndexOf('/') + 1);
+    }
+    return '';
   };
 
   private isImage = (path: string) => {
