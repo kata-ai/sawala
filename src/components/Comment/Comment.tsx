@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import moment from 'moment';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
@@ -156,7 +155,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
               )}
             </Comment.ChatAction>
             <Comment.ChatTime position={isMyComment ? 'right' : 'left'}>
-              {moment(comment.timestamp).format('HH:ss')}
+              {comment.time || ''}
             </Comment.ChatTime>
             {isMyComment && !comment.isChannel && (
               <Comment.ChatTick>
