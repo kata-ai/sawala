@@ -1,7 +1,7 @@
 {
   "name": "sawala",
   "version": "0.3.3",
-  "description": "a bundle of qiscus-chat-sdk with any kata.ai adaptation for spesific our needed.",
+  "description": "Wrapper of Qiscus Chat SDK using the React framework. It's designed for Kata Internal needs.",
   "scripts": {
     "start": "rollup -c -w",
     "build": "rollup -c",
@@ -28,7 +28,7 @@
   ],
   "author": "Kata.ai <dev@kata.ai>",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/kata-ai/sawala/blob/master/README.md",
+  "homepage": "https://github.com/kata-ai/sawala#readme",
   "devDependencies": {
     "@svgr/cli": "^4.3.3",
     "@types/jest": "^24.0.18",
