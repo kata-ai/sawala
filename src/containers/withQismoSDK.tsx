@@ -18,9 +18,11 @@ export type withQismoSDKProps = {
   previewImage?: string;
   activeReplyComment?: Comment;
   currentFile?: File;
+  imageURL?: string;
   onFetchComments: (firstId: number) => Promise<any>;
   onInit: (config: AppConfig) => Promise<boolean>;
-  onSubmitImage: (caption: string) => Promise<any>;
+  onUploadImage: (file: File) => Promise<string>;
+  onSubmitImage: (url: string, file: File, caption: string) => Promise<any>;
   onSubmitFile: (file: File) => void;
   onDeleteComment: (id: string, isForEveryone: boolean) => Promise<any>;
   onChatTarget?: (email: string) => void;
@@ -40,6 +42,7 @@ interface QiscusSDK {
   file?: File;
   activeReplyComment?: Comment;
   isLoadingMore?: boolean;
+  imageURL?: string;
 }
 
 export function withQismoSDK(
@@ -108,25 +111,18 @@ export function withQismoSDK(
       }
     };
 
-    handleSubmitImage = async (caption: string) => {
-      const { file } = this.state;
+    handleSubmitImage = (url: string, file: File, caption: string) => {
+      const text = `[file] ${url} [/file]`;
+      const uniqueId = null;
+      const payload = getPayload(url, file, caption);
+      const type = CommentType.FileAttachment;
 
-      if (file) {
-        // upload file to qiscus server
-        return uploadFile(file).then(async (url: string) => {
-          const text = `[file] ${url} [/file]`;
-          const uniqueId = null;
-          const payload = await getPayload(url, file, caption);
-          const type = CommentType.FileAttachment;
-
-          // send comment with image url
-          return sendComment(text, uniqueId, type, payload).then(
-            async (response: any) => {
-              return Promise.resolve(response);
-            }
-          );
-        });
-      }
+      // send comment with image url
+      return sendComment(text, uniqueId, type, payload).then(
+        (response: any) => {
+          return Promise.resolve(response);
+        }
+      );
     };
 
     handleSubmitText = (text: string) => {
@@ -188,17 +184,28 @@ export function withQismoSDK(
     };
 
     handlePreviewImage = (ofFile: File) => {
-      if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
+      if (this.state.previewImage) {
+        URL.revokeObjectURL(this.state.previewImage);
+      }
       this.setState({
         previewImage: URL.createObjectURL(ofFile),
         file: ofFile
       });
     };
 
+    handleUploadImage = (ofFile: File) => {
+      // upload file to qiscus server
+      return uploadFile(ofFile).then((url: string) => {
+        this.setState({ imageURL: url });
+        return Promise.resolve(url);
+      });
+    };
+
     handleClearPreview = () => {
       this.setState({
         previewImage: undefined,
-        file: undefined
+        file: undefined,
+        imageURL: undefined
       });
       if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
     };
@@ -211,6 +218,8 @@ export function withQismoSDK(
           isLoadingMore={this.state.isLoadingMore}
           onInit={this.handleInit}
           currentFile={this.state.file}
+          imageURL={this.state.imageURL}
+          onUploadImage={this.handleUploadImage}
           onPreviewImage={this.handlePreviewImage}
           onFetchComments={this.handleFetchComments}
           onDeleteComment={this.handleDeleteComment}

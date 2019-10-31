@@ -1,56 +1,21 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { Button as KataButton } from '@kata-kit/button';
 
-export const Main = styled.div<{ background?: string }>`
-  /* todo: next it should possible to wrap in relative position 1ith width 100% */
+export const Main = styled.div`
   width: calc(100% - 280px);
   position: absolute;
-  height: 100%;
-  background: ${props =>
-    props.background
-      ? `url(${props.background}) center center / cover no-repeat rgb(255, 255, 255)`
-      : '#fff'};
+  min-height: 160px;
+  background: #ffffff;
   flex-direction: column;
   justify-content: space-between;
-  align-content: center;
-  z-index: 999;
-  opacity: 0;
-  display: none;
-
-  ${props =>
-    props.background &&
-    css`
-      opacity: 1;
-      display: flex;
-    `}
-`;
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  background: #fafafa;
-  border-bottom: 1px solid #e8e8e8;
-  padding: 8px 16px;
-  color: #666;
   align-items: center;
-  margin: 0;
-  width: 100%;
-`;
-export const HeaderTitle = styled.div`
-  align-self: flex-start;
-  flex: 1;
-  height: 48px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  h4 {
-    margin: 0;
-    font-size: 15px;
-  }
-  span {
-    font-size: 13px;
-  }
+  z-index: 999;
+  opacity: 1;
+  display: flex;
+  bottom: 0;
+  left: auto;
+  right: auto;
 `;
 export const Button = styled(KataButton)`
   border: none !important;
@@ -70,40 +35,9 @@ export const Button = styled(KataButton)`
     box-shadow: none !important;
   }
 `;
-
 export const CloseButton = styled(Button)`
   background-color: transparent !important;
-  margin-left: auto;
   cursor: pointer !important;
-`;
-
-export const Picker = styled.label`
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: auto;
-  right: auto;
-`;
-export const PickerButton = styled.div`
-  border: 1px solid #979797;
-  color: gray;
-  background-color: #fff;
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 700;
-  flex: 0 0 auto;
-  max-width: 100px;
-  text-align: center;
-  margin: 0 auto;
-  cursor: pointer;
-  transition: all 0.3s ease-out;
-`;
-export const PickerInput = styled.input`
-  display: none;
 `;
 export const Action = styled.div`
   display: flex;
@@ -138,4 +72,56 @@ export const ActionButton = styled(Button)`
       background-color: #006fe6 !important;
     }
   }
+`;
+export const Thumbnail = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  height: 96px;
+  margin: 0;
+  box-shadow: 0 -8px 16px hsla(0, 0%, 78%, 0.2);
+`;
+export const ThumbnailImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 98px;
+`;
+export const Image = styled.img`
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+`;
+export const ThumbnailInfo = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  flex: 1;
+`;
+export const Title = styled.h4`
+  font-size: 13px;
+  line-height: 24px;
+  font-weight: 500;
+  color: #24282d;
+  margin: 0;
+  padding: 0;
+  letter-spacing: 0.2px;
+`;
+export const Subtitle = styled.div`
+  flex: 1;
+  font-size: 11px;
+  line-height: 24px;
+  font-weight: 500;
+  color: #979797;
+  letter-spacing: 0.2px;
+`;
+export const ThumbnailProgress = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  flex: 0 74px;
 `;

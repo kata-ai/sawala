@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, createRef } from 'react';
 
 import { withQismoSDKProps } from 'containers/withQismoSDK';
 
@@ -115,7 +115,11 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
               onClick={(e: any) => {
                 e.preventDefault();
                 e.stopPropagation();
-                document.getElementById('btn-file')!.click();
+
+                const inputFileElement = document.getElementById(
+                  'btn-file'
+                ) as HTMLInputElement;
+                inputFileElement.click();
               }}
             >
               <FileIcon />
@@ -126,7 +130,11 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
               onClick={(e: any) => {
                 e.preventDefault();
                 e.stopPropagation();
-                document.getElementById('btn-image')!.click();
+
+                const inputImageElement = document.getElementById(
+                  'btn-image'
+                ) as HTMLInputElement;
+                inputImageElement.click();
               }}
             >
               <ImageIcon />
@@ -140,6 +148,10 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
                 const file = Array.from(event.target.files).pop();
                 if (file) {
                   this.props.onPreviewImage(file as File);
+                  const inputImageElement = document.getElementById(
+                    'btn-image'
+                  ) as HTMLInputElement;
+                  inputImageElement.value = '';
                 }
               }}
             />
@@ -151,6 +163,10 @@ class QismoMessage extends React.Component<MessageProps, MessageState> {
                 const file = Array.from(event.target.files).pop();
                 if (file) {
                   this.props.onSubmitFile(file as File);
+                  const inputFileElement = document.getElementById(
+                    'btn-file'
+                  ) as HTMLInputElement;
+                  inputFileElement.value = '';
                 }
               }}
             />

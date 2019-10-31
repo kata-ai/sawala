@@ -1,16 +1,19 @@
 import React from 'react';
 
-import { Selected } from 'types';
-
 import Preview from './components';
 import { SendIcon, CloseIcon } from 'icons';
 
+import { Circle } from '@kata-kit/loading';
+
+import { formatBytes } from 'libs/utils';
+
 interface PreviewProps {
-  selected: Selected;
   background?: string;
-  onClosed: () => void;
-  onChangedImage: (file: File) => void;
-  onSubmitted: (caption: string) => void;
+  onUploadImage: (file: File) => Promise<string>;
+  currentFile: File;
+  imageURL?: string;
+  onSubmitImage: (url: string, file: File, caption: string) => Promise<any>;
+  onClearPreview: () => void;
 }
 
 interface PreviewStates {
@@ -18,52 +21,81 @@ interface PreviewStates {
 }
 
 class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
+  defaultStates: PreviewStates = {
+    caption: ''
+  };
+
   constructor(props: PreviewProps) {
     super(props);
 
-    this.state = {
-      caption: ''
-    };
+    this.state = this.defaultStates;
   }
+
+  componentDidMount() {
+    this.props.onUploadImage(this.props.currentFile).then(() => {
+      // do nothing
+    });
+  }
+
   handleCaptionChange = (event: any) => {
     this.setState({ caption: event.target.value });
   };
 
   handleCaptionKeyDown = (event: any) => {
     if (event.keyCode === 13) {
-      this.props.onSubmitted(this.state.caption);
-      this.setState({ caption: '' });
+      this.handleSubmit();
     }
   };
 
+  handleSubmit = () => {
+    const { caption } = this.state;
+    const { imageURL, currentFile, onSubmitImage, onClearPreview } = this.props;
+    if (imageURL && currentFile) {
+      onSubmitImage(imageURL, currentFile, caption).then(() => {
+        onClearPreview();
+        this.setState({ ...this.defaultStates });
+      });
+    }
+  };
+
+  handleCloseImage = () => {
+    this.setState({ ...this.defaultStates });
+    this.props.onClearPreview();
+  };
+
   render() {
-    const { selected } = this.props;
+    const { currentFile, imageURL } = this.props;
     return (
-      <Preview.Main background={this.props.background}>
-        <Preview.Header>
-          <Preview.HeaderTitle>
-            <h4>Preview</h4>
-            <span>Send to {selected.name || 'user'}</span>
-          </Preview.HeaderTitle>
-          <Preview.CloseButton
-            type="button"
-            color="secondary"
-            onClick={this.props.onClosed}
-          >
-            <CloseIcon />
-          </Preview.CloseButton>
-        </Preview.Header>
-        <Preview.Picker>
-          <Preview.PickerButton>Browse</Preview.PickerButton>
-          <Preview.PickerInput
-            type="file"
-            accept="image/*"
-            onChange={(event: any) => {
-              const file = Array.from(event.target.files).pop();
-              this.props.onChangedImage(file as File);
-            }}
-          />
-        </Preview.Picker>
+      <Preview.Main>
+        <Preview.Thumbnail>
+          <Preview.ThumbnailImage>
+            <Preview.Image src={this.props.background} alt="thumbnail" />
+          </Preview.ThumbnailImage>
+          <Preview.ThumbnailInfo>
+            {currentFile && (
+              <>
+                <Preview.Title>{currentFile.name}</Preview.Title>
+                <Preview.Subtitle>
+                  {formatBytes(currentFile.size)}
+                </Preview.Subtitle>
+              </>
+            )}
+          </Preview.ThumbnailInfo>
+          <Preview.ThumbnailProgress>
+            {!imageURL ? (
+              <Circle />
+            ) : (
+              <Preview.CloseButton
+                type="button"
+                color="secondary"
+                onClick={this.handleCloseImage}
+                isIcon
+              >
+                <CloseIcon />
+              </Preview.CloseButton>
+            )}
+          </Preview.ThumbnailProgress>
+        </Preview.Thumbnail>
         <Preview.Action>
           <Preview.ActionText
             onChange={this.handleCaptionChange}
@@ -73,13 +105,14 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
           <Preview.ActionButton
             type="button"
             color="secondary"
+            size="sm"
             onClick={(event: any) => {
               event.preventDefault();
-              this.props.onSubmitted(this.state.caption || '');
-              this.setState({ caption: '' });
+              this.handleSubmit();
             }}
+            disabled={!imageURL}
           >
-            <SendIcon />
+            <SendIcon fill={!imageURL ? '#C2C7C8' : '#006FE6'} />
           </Preview.ActionButton>
         </Preview.Action>
       </Preview.Main>
