@@ -39,7 +39,7 @@ import * as React from 'react';
 import { SawalaChat } from 'sawala';
 import { EmptyMessage } from '@kata-kit/common';
 
-export default class CmsContainer extends React.Component<Props> {
+export default class Chat extends React.Component<Props> {
   renderEmptyRoom = () => {
     return (
       <EmptyMessage
