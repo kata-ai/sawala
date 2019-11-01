@@ -84,6 +84,7 @@
     "moment": "^2.24.0",
     "qiscus-sdk-core": "^2.8.33",
     "react-confirm-alert": "^2.4.1",
+    "react-modal-image": "^2.5.0",
     "styled-components": "^4.4.0"
   }
 }

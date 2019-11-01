@@ -10,6 +10,7 @@ import { checkValidImage } from 'libs/utils';
 interface SpeechProps {
   comment: CommentInterface;
   isMyComment: boolean;
+  onSelectImage: (image: string) => void;
 }
 
 interface SpeechState {}
@@ -46,7 +47,11 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
           return (
             <Fragment>
               <Speech.Attachment>
-                <Speech.Image src={path} alt="image" />
+                <Speech.Image
+                  src={path}
+                  alt="image"
+                  onClick={() => this.props.onSelectImage(path)}
+                />
               </Speech.Attachment>
             </Fragment>
           );
@@ -73,7 +78,11 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
           return (
             <Fragment>
               <Speech.Attachment>
-                <Speech.Image src={path} alt="image" />
+                <Speech.Image
+                  src={path}
+                  alt="image"
+                  onClick={() => this.props.onSelectImage(path)}
+                />
               </Speech.Attachment>
             </Fragment>
           );
@@ -103,7 +112,15 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
           <Fragment>
             {this.isImage(payload.url) ? (
               <Speech.Attachment>
-                <Speech.Image src={payload.url} alt={payload.file_name} />
+                <Speech.Image
+                  src={payload.url}
+                  alt={payload.file_name}
+                  onClick={() => {
+                    if (payload.url) {
+                      this.props.onSelectImage(payload.url);
+                    }
+                  }}
+                />
               </Speech.Attachment>
             ) : (
               payload.file_name && (

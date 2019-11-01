@@ -37,7 +37,8 @@ export default {
     'styled-components',
     'shortid',
     'nanoid',
-    'react-confirm-alert'
+    'react-confirm-alert',
+    'react-modal-image'
   ],
   plugins: [
     external(),

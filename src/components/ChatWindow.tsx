@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import styled from 'styled-components';
+import { Lightbox } from 'react-modal-image';
 
 import { Selected, QiscusCore, Comment, AppConfig } from 'types';
 
@@ -126,6 +127,14 @@ class ChatWindow extends React.Component<WindowProps, States> {
             noSelectedComponent
           )}
         </Container>
+        {this.props.selectedImageURL && (
+          <Lightbox
+            small={this.props.selectedImageURL}
+            large={this.props.selectedImageURL}
+            alt="Qismo Chat"
+            onClose={this.props.onClearSelectImage}
+          />
+        )}
       </React.Fragment>
     );
   }

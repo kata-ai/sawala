@@ -6,3 +6,4 @@ interface Window {
 }
 
 declare module 'qiscus-sdk-core';
+declare module 'react-modal-image';

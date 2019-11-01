@@ -18,7 +18,8 @@ export type withQismoSDKProps = {
   previewImage?: string;
   activeReplyComment?: Comment;
   currentFile?: File;
-  imageURL?: string;
+  imageURL?: string; // image url for upload with message
+  selectedImageURL?: string; // selected image for display in lightbox
   onFetchComments: (firstId: number) => Promise<any>;
   onInit: (config: AppConfig) => Promise<boolean>;
   onUploadImage: (file: File) => Promise<string>;
@@ -30,6 +31,8 @@ export type withQismoSDKProps = {
   onPreviewImage: (file: File) => void;
   onSubmitText: (text: string) => Promise<any>;
   onReplyCommment?: (comment: Comment) => void;
+  onSelectImage: (url: string) => void;
+  onClearSelectImage: () => void;
   onCloseReplyCommment?: () => void;
   // callbacks
   loginSuccessCallback?: (authData: any) => void;
@@ -43,6 +46,7 @@ interface QiscusSDK {
   activeReplyComment?: Comment;
   isLoadingMore?: boolean;
   imageURL?: string;
+  selectedImageURL?: string;
 }
 
 export function withQismoSDK(
@@ -210,6 +214,14 @@ export function withQismoSDK(
       if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
     };
 
+    handleSelectImage = (image: string) => {
+      this.setState({ selectedImageURL: image });
+    };
+
+    handleClearSelectImage = () => {
+      this.setState({ selectedImageURL: undefined });
+    };
+
     render() {
       return (
         <WrappedComponent
@@ -219,6 +231,7 @@ export function withQismoSDK(
           onInit={this.handleInit}
           currentFile={this.state.file}
           imageURL={this.state.imageURL}
+          selectedImageURL={this.state.selectedImageURL}
           onUploadImage={this.handleUploadImage}
           onPreviewImage={this.handlePreviewImage}
           onFetchComments={this.handleFetchComments}
@@ -230,6 +243,8 @@ export function withQismoSDK(
           activeReplyComment={this.state.activeReplyComment}
           previewImage={this.state.previewImage}
           onClearPreview={this.handleClearPreview}
+          onSelectImage={this.handleSelectImage}
+          onClearSelectImage={this.handleClearSelectImage}
           onReplyCommment={this.handleReplyComment}
           onCloseReplyCommment={this.handleCloseReplyComment}
           {...this.props}
