@@ -5,6 +5,7 @@ import { Comment as CommentInterface, CommentType } from 'types';
 import Speech from './components';
 
 import { FileIcon } from 'icons';
+import { checkValidImage } from 'libs/utils';
 
 interface SpeechProps {
   comment: CommentInterface;
@@ -36,33 +37,47 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
 
   private renderText = () => {
     const { message } = this.props.comment;
-    const image = this.isTextAsImage(message);
+    const path = this.getFileFromText(message);
 
     // when comment text is [file] url [/file]
     if (this.typeOfCommentIs(CommentType.Text)) {
-      if (image) {
-        if (this.isImage(image)) {
+      if (path) {
+        if (this.isImage(path)) {
           return (
             <Fragment>
               <Speech.Attachment>
-                <Speech.Image src={image} alt="image" />
+                <Speech.Image src={path} alt="image" />
               </Speech.Attachment>
             </Fragment>
           );
         }
+        if (this.isFile(path)) {
+          return (
+            <Speech.Attachment>
+              <Speech.AttachmentFile
+                href={path}
+                target="_blank"
+                isMyComment={this.props.isMyComment}
+              >
+                <FileIcon fill={this.getIconColor()} />
+                {this.getFileName(path)}
+              </Speech.AttachmentFile>
+            </Speech.Attachment>
+          );
+        }
 
-        return (
-          <Speech.Attachment>
-            <Speech.AttachmentFile
-              href={image}
-              target="_blank"
-              isMyComment={this.props.isMyComment}
-            >
-              <FileIcon fill={this.getIconColor()} />
-              {this.getFileName(image)}
-            </Speech.AttachmentFile>
-          </Speech.Attachment>
-        );
+        const res = checkValidImage(path).then(async (response: any) => {
+          return response.status === 'ok';
+        });
+        if (res) {
+          return (
+            <Fragment>
+              <Speech.Attachment>
+                <Speech.Image src={path} alt="image" />
+              </Speech.Attachment>
+            </Fragment>
+          );
+        }
       }
       return <p>{message}</p>;
     }
@@ -211,10 +226,14 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
   };
 
   private isImage = (path: string) => {
-    return path.match(/\.(jpeg|jpg|gif|png)$/) != null;
+    return path.match(/\.(jpeg|jpg|gif|png|webp|svg)$/) != null;
   };
 
-  private isTextAsImage = (text: string) => {
+  private isFile = (path: string) => {
+    return path.match(/\.(mov|mp4|avi|mkv|tar|zip|rar|iso|pdf|7z)$/) != null;
+  };
+
+  private getFileFromText = (text: string) => {
     const regex = RegExp(/(\[file\])(.*?)(\[\/file\])/g);
     const match = regex.exec(text);
     if (match) {
