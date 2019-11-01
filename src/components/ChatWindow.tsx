@@ -131,7 +131,7 @@ class ChatWindow extends React.Component<WindowProps, States> {
           <Lightbox
             small={this.props.selectedImageURL}
             large={this.props.selectedImageURL}
-            alt="Qismo Chat"
+            alt="Preview Image"
             onClose={this.props.onClearSelectImage}
           />
         )}
