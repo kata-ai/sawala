@@ -102,7 +102,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
               position={isMyComment ? 'right' : 'left'}
               first={isFirstComment}
             >
-              <Speech {...this.props} />
+              <Speech isMyComment={isMyComment} {...this.props} />
             </Comment.ChatBaloon>
             <Comment.ChatAction position={isMyComment ? 'right' : 'left'}>
               {isMyComment ? (
@@ -168,7 +168,7 @@ class QismoComment extends React.Component<CommentProps, CommentStates> {
             )}
           </Fragment>
         ) : (
-          <Speech {...this.props} />
+          <Speech isMyComment={isMyComment} {...this.props} />
         )}
       </Comment.Chat>
     );

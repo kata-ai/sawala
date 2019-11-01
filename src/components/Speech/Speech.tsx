@@ -8,6 +8,7 @@ import { FileIcon } from 'icons';
 
 interface SpeechProps {
   comment: CommentInterface;
+  isMyComment: boolean;
 }
 
 interface SpeechState {}
@@ -52,8 +53,12 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
 
         return (
           <Speech.Attachment>
-            <Speech.AttachmentFile href={image} target="_blank">
-              <FileIcon />
+            <Speech.AttachmentFile
+              href={image}
+              target="_blank"
+              isMyComment={this.props.isMyComment}
+            >
+              <FileIcon fill={this.getIconColor()} />
               {this.getFileName(image)}
             </Speech.AttachmentFile>
           </Speech.Attachment>
@@ -88,8 +93,12 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
             ) : (
               payload.file_name && (
                 <Speech.Attachment>
-                  <Speech.AttachmentFile href={payload.url} target="_blank">
-                    <FileIcon />
+                  <Speech.AttachmentFile
+                    href={payload.url}
+                    target="_blank"
+                    isMyComment={this.props.isMyComment}
+                  >
+                    <FileIcon fill={this.getIconColor()} />
                     {payload.file_name}
                   </Speech.AttachmentFile>
                 </Speech.Attachment>
@@ -212,6 +221,10 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
       return match[2].trim();
     }
     return null;
+  };
+
+  private getIconColor = () => {
+    return this.props.isMyComment ? '#FFFFFF' : '#949A9D';
   };
 }
 

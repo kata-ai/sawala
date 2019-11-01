@@ -14,16 +14,19 @@ export const Attachment = styled.div`
   padding: 4px;
 `;
 
-export const AttachmentFile = styled.a`
+export const AttachmentFile = styled.a<{ isMyComment?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 6px 8px;
-  color: ${variables.colors.gray60};
-  background-color: ${variables.colors.gray10};
+  color: ${props =>
+    props.isMyComment ? variables.colors.white : variables.colors.gray80};
+  background-color: transparent;
   border-radius: 2px;
   cursor: pointer;
   text-decoration: none;
+  font-size: 13px;
+  line-height: 24px;
 
   svg {
     margin-right: 8px;
@@ -32,6 +35,8 @@ export const AttachmentFile = styled.a`
   &:hover,
   &:active,
   &:focus {
+    color: ${props =>
+      props.isMyComment ? variables.colors.white : variables.colors.gray80};
     text-decoration: none;
     outline: none;
     box-shadow: none;
