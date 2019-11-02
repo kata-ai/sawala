@@ -3,25 +3,23 @@ import { compose } from 'recompose';
 import styled from 'styled-components';
 import { Lightbox } from 'react-modal-image';
 
-import { Selected, QiscusCore, Comment, AppConfig } from 'types';
+import { QiscusCore, Comment, AppConfig, Selected } from 'types';
 
 import { withQismoSDK, withQismoSDKProps } from 'containers/withQismoSDK';
 import { parseAsJSON } from 'libs/utils';
 
 import { variables } from '@kata-kit/theme';
 import PreviewUpload from './PreviewUpload';
-import Header, { AssignmentType } from './Header';
+import Header from './Header';
 import Conversation from './Conversation';
 import Message from './Message';
 
 interface InnerProps {
-  onClickHeaderDetail: (selected: Selected) => void;
-  onClickHeaderAgent: (type: AssignmentType, selected: Selected) => void;
   onClickDetailComment: (comment: Comment) => void;
-  onClickResolved: (selected: Selected) => void;
   onRendered: (core: QiscusCore) => void;
   noSelectedComponent?: React.ReactElement;
-  customizeHeaderComponent?: (selected: Selected) => React.ReactElement;
+  headerComponent?: React.ReactElement;
+  onSelectedRoom?: (selected: Selected) => void;
   config: AppConfig;
 }
 
@@ -62,24 +60,6 @@ class ChatWindow extends React.Component<WindowProps, States> {
     }));
   };
 
-  handleOpenResolved = () => {
-    if (this.props.core && this.props.core.selected) {
-      this.props.onClickResolved(this.props.core.selected);
-    }
-  };
-
-  handleOpenDetail = () => {
-    if (this.props.core && this.props.core.selected) {
-      this.props.onClickHeaderDetail(this.props.core.selected);
-    }
-  };
-
-  handleOpenAssignment = (type: AssignmentType) => {
-    if (this.props.core && this.props.core.selected) {
-      this.props.onClickHeaderAgent(type, this.props.core.selected);
-    }
-  };
-
   render() {
     const {
       onUploadImage,
@@ -89,6 +69,7 @@ class ChatWindow extends React.Component<WindowProps, States> {
       onClearPreview,
       selected,
       noSelectedComponent,
+      headerComponent,
       imageURL
     } = this.props;
     const { reload } = this.state;
@@ -109,13 +90,7 @@ class ChatWindow extends React.Component<WindowProps, States> {
                 />
               )}
 
-              <Header
-                onSwitchBot={this.handleSwitchBot}
-                onOpenDetail={this.handleOpenDetail}
-                onOpenAssignment={this.handleOpenAssignment}
-                onOpenResolved={this.handleOpenResolved}
-                {...this.props}
-              />
+              <Header headerComponent={headerComponent} {...this.props} />
               <Conversation reload={reload} {...this.props} />
               {!parseAsJSON(selected.options)['is_resolved'] && (
                 <Message
