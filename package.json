@@ -12,10 +12,6 @@
     "version:minor": "npm version minor && git push -u origin",
     "version:major": "npm version major && git push -u origin"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kata-ai/sawala.git"
@@ -31,7 +27,7 @@
   "homepage": "https://github.com/kata-ai/sawala#readme",
   "devDependencies": {
     "@svgr/cli": "^4.3.3",
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^24.0.21",
     "@types/lodash-es": "^4.17.3",
     "@types/react": "^16.9.3",
     "@types/react-dom": "^16.9.1",

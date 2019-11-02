@@ -3,5 +3,8 @@
  * @param arg
  */
 export default function parseAsJSON(arg: string = ''): JSON {
-  return JSON.parse(arg);
+  if (arg) {
+    return JSON.parse(arg);
+  }
+  return JSON.parse('{}');
 }
