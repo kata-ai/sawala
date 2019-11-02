@@ -63,8 +63,8 @@ export default {
         'images/*',
         'assets/*',
         'example/*',
-        '*.test.ts',
-        '*.spec.ts'
+        '**/*.test.ts',
+        '**/*.spec.ts'
       ],
       clean: true,
       check: false
