@@ -111,7 +111,7 @@ export default class Chat extends React.Component<Props> {
             password: 'q1w2e3r4',
             displayName: 'Rohmad from Kata.ai',
             avatar:
-              'https://qiscuss3.s3.amazonaws.com/uploads/55c0c6ee486be6b686d52e5b9bbedbbf/2.png'
+              'https://res.cloudinary.com/kata-ai/image/upload/v1572663263/sawala/kata_favicon-02_zzldhx.png'
           }
         }}
         onClickHeaderDetail={this.handleClickHeaderDetail}
