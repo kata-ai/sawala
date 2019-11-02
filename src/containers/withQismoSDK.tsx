@@ -34,6 +34,7 @@ export type withQismoSDKProps = {
   onSelectImage: (url: string) => void;
   onClearSelectImage: () => void;
   onCloseReplyCommment?: () => void;
+  onSelectedRoom?: (selected: Selected) => void;
   // callbacks
   loginSuccessCallback?: (authData: any) => void;
   newMessagesCallback?: (messages: any) => void;
@@ -269,6 +270,9 @@ export function withQismoSDK(
           activeReplyComment: undefined
         });
         window.qiscus.selected = selected;
+        if (this.props.onSelectedRoom) {
+          this.props.onSelectedRoom(selected);
+        }
       }
     }
   };
