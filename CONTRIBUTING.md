@@ -114,12 +114,9 @@ export default class Chat extends React.Component<Props> {
               'https://res.cloudinary.com/kata-ai/image/upload/v1572663263/sawala/kata_favicon-02_zzldhx.png'
           }
         }}
-        onClickHeaderDetail={this.handleClickHeaderDetail}
-        onClickHeaderAgent={this.handleClickHeaderAgent}
-        onClickDetailComment={this.handleClickDetailComment}
-        onClickResolved={this.handleClickResolved}
         onRendered={this.handleRendered}
         noSelectedComponent={this.renderEmptyRoom()}
+        onClickDetailComment={this.handleClickDetailComment}
         loginSuccessCallback={this.handleloginSuccessCallback}
         newMessagesCallback={this.handlenewMessagesCallback}
       />

@@ -65,12 +65,9 @@ export default class Chat extends React.Component<Props> {
               'https://res.cloudinary.com/kata-ai/image/upload/v1572663263/sawala/kata_favicon-02_zzldhx.png'
           }
         }}
-        onClickHeaderDetail={this.handleClickHeaderDetail}
-        onClickHeaderAgent={this.handleClickHeaderAgent}
-        onClickDetailComment={this.handleClickDetailComment}
-        onClickResolved={this.handleClickResolved}
         onRendered={this.handleRendered}
         noSelectedComponent={this.renderEmptyRoom()}
+        onClickDetailComment={this.handleClickDetailComment}
         loginSuccessCallback={this.handleloginSuccessCallback}
         newMessagesCallback={this.handlenewMessagesCallback}
       />
@@ -89,12 +86,14 @@ SawalaChat props:
 
 | prop                 | type                                | required | description                                                                                         |
 | -------------------- | ----------------------------------- | -------- | --------------------------------------------------------------------------------------------------- |
-| config               | [AppConfig](#appconfig)             | true     | App Configuration for setup to [Qiscus Web SDK Core](https://github.com/qiscus/qiscus-sdk-web-core) |
+| config               | [AppConfig](#appconfig)             | yes      | App Configuration for setup to [Qiscus Web SDK Core](https://github.com/qiscus/qiscus-sdk-web-core) |
+| onRendered           | function([QiscusCore](#qiscuscore)) | yes      | Callback after Sawala successfully rendered, for example you can call method `qiscus.getNonce()`    |
+| newMessagesCallback  | function([messages](#messages))     | yes      | Callback when you are have a new messages incoming                                                  |
+| onClickDetailComment | function([Comment](#comment))       | yes      | Callback when you click `Message Details` in your own message                                       |
 | noSelectedComponent  | ReactElement                        | no       | React element for showing an empty state                                                            |
 | headerComponent      | ReactElement                        | no       | React element for additional feature in Header. E.g: `Context menu`                                 |
-| onRendered           | function([QiscusCore](#qiscuscore)) | yes      | Callback after Sawala successfully rendered, for example you can call method `qiscus.getNonce()`    |
+| onSelectedRoom       | function([Selected](#selected))     | no       | Callback after selected room using method `window.qiscus.setSelected`                               |
 | loginSuccessCallback | function([AuthData](#authdata))     | no       | Callback when you initiate to qiscus is success                                                     |
-| newMessagesCallback  | function([messages](#messages))     | true     | Callback when you are have a new messages incoming                                                  |
 
 #### AppConfig
 
@@ -239,6 +238,73 @@ Messages also is response from qiscus-sdk-web-core. Look like this:
     "username": "User from Kata.ai"
   }
 ]
+```
+
+#### Selected
+
+Selected also is response from qiscus-sdk-web-core. Look like this:
+
+```json
+{
+  "id": 5000296,
+  "last_comment_id": 81421286,
+  "last_comment_message": "Jangan lupa makan mahal, minimal sehari sekali.",
+  "avatar": "https://api.telegram.org/file/bot925192808:AAHfy0Y0pnVPk_n60w0I6zNJWl4bqzgFXOc/profile_photos/file_15.jpg",
+  "name": "Rohmad from Kata.ai",
+  "room_type": "group",
+  "participants": [],
+  "options": null,
+  "topics": [],
+  "comments": [],
+  "count_notif": 0,
+  "isLoaded": false,
+  "unread_comments": [],
+  "custom_title": null,
+  "custom_subtitle": null,
+  "unique_id": "6f5689f6-0aee-45f9-980f-6fa74eea70df",
+  "isChannel": false,
+  "participantNumber": 0
+}
+```
+
+#### Comment
+
+Comment also is response from qiscus-sdk-web-core. Look like this:
+
+```json
+{
+  "id": 81365202,
+  "before_id": 81363608,
+  "message": "[file] https://d1edrlpyc25xu0.cloudfront.net/orgin-lg5ja1kyfcrid8r/raw/upload/yptF4THWmI/50727c5bd9eee40535166b73f6f706f5.jpg [/file]",
+  "username_as": "User from Kata.ai",
+  "username_real": "orgin-lg5ja1kyfcrid8r_admin@qismo.com",
+  "date": "2019-11-01",
+  "time": "19:48",
+  "timestamp": "2019-11-01T12:48:18Z",
+  "unique_id": "bq1572612497702",
+  "avatar": "https://res.cloudinary.com/kata-ai/image/upload/v1572501422/klient/admin-avatar_2x_b39pbw.png",
+  "room_id": 5000305,
+  "isChannel": false,
+  "unix_timestamp": 1572612498,
+  "is_deleted": false,
+  "isPending": false,
+  "isFailed": false,
+  "isDelivered": true,
+  "isRead": true,
+  "isSent": true,
+  "attachment": null,
+  "payload": {
+    "url": "https://d1edrlpyc25xu0.cloudfront.net/orgin-lg5ja1kyfcrid8r/raw/upload/yptF4THWmI/50727c5bd9eee40535166b73f6f706f5.jpg.webp",
+    "caption": "Ini makanan ku hari ini, anti murah-murah club",
+    "file_name": "50727c5bd9eee40535166b73f6f706f5.jpg.webp",
+    "size": 6678,
+    "pages": 1,
+    "encryption_key": ""
+  },
+  "status": "read",
+  "type": "file_attachment",
+  "subtype": null
+}
 ```
 
 ## License
