@@ -21,6 +21,7 @@ interface InnerProps {
   onClickResolved: (selected: Selected) => void;
   onRendered: (core: QiscusCore) => void;
   noSelectedComponent?: React.ReactElement;
+  customizeHeaderComponent?: (selected: Selected) => React.ReactElement;
   config: AppConfig;
 }
 
