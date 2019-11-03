@@ -10,5 +10,6 @@ module.exports = {
     'src/*.{js,jsx,ts,tsx}',
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts'
-  ]
+  ],
+  modulePathIgnorePatterns: ['<rootDir>/build/']
 };

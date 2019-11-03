@@ -1,0 +1,13 @@
+# Use node.js + test on all supported versions
+language: node_js
+node_js:
+  - '10'
+
+install:
+  - npm install
+
+script:
+  - npm test
+
+before_script:
+  - npm run build
