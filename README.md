@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/rohmad-st/sawala.svg?branch=master)](https://travis-ci.org/rohmad-st/sawala)
+[![Coverage Status](https://coveralls.io/repos/github/rohmad-st/sawala/badge.svg?branch=master)](https://coveralls.io/github/rohmad-st/sawala?branch=master)
+[![npm version](https://badge.fury.io/js/sawala.svg)](https://badge.fury.io/js/sawala)
+
 # Sawala
 
 **Sawala** is an Wrapper of [Qiscus Chat SDK](https://github.com/qiscus/qiscus-sdk-web-core) using the React framework. It's designed for Kata Internal needs.
