@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/kata-ai/sawala.svg?branch=master)](https://travis-ci.org/kata-ai/sawala)
-[![npm version](https://badge.fury.io/js/sawala.svg)](https://badge.fury.io/js/sawala)
+[![Dependencies](https://david-dm.org/kata-ai/sawala.svg)](https://david-dm.org/kata-ai/sawala)
+[![NPM Version](https://img.shields.io/npm/v/sawala.svg)](https://www.npmjs.com/package/sawala)
 
 # Sawala
 
