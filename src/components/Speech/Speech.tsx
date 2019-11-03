@@ -4,8 +4,9 @@ import { Comment as CommentInterface, CommentType } from 'types';
 
 import Speech from './components';
 
-import { FileIcon } from 'icons';
-import { checkValidImage } from 'libs/utils';
+import { SpeechText } from './SpeechText';
+import { SpeechFile } from './SpeechFile';
+import { SpeechImage } from './SpeechImage';
 
 interface SpeechProps {
   comment: CommentInterface;
@@ -20,7 +21,7 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
     return (
       <Fragment>
         <Speech.Box>
-          {this.renderText()}
+          <SpeechText {...this.props} />
           {this.renderSystemEvent()}
           {this.renderFileAttachment()}
 
@@ -35,62 +36,6 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
       </Fragment>
     );
   }
-
-  private renderText = () => {
-    const { message } = this.props.comment;
-    const path = this.getFileFromText(message);
-
-    // when comment text is [file] url [/file]
-    if (this.typeOfCommentIs(CommentType.Text)) {
-      if (path) {
-        if (this.isImage(path)) {
-          return (
-            <Fragment>
-              <Speech.Attachment>
-                <Speech.Image
-                  src={path}
-                  alt="image"
-                  onClick={() => this.props.onSelectImage(path)}
-                />
-              </Speech.Attachment>
-            </Fragment>
-          );
-        }
-        if (this.isFile(path)) {
-          return (
-            <Speech.Attachment>
-              <Speech.AttachmentFile
-                href={path}
-                target="_blank"
-                isMyComment={this.props.isMyComment}
-              >
-                <FileIcon fill={this.getIconColor()} />
-                {this.getFileName(path)}
-              </Speech.AttachmentFile>
-            </Speech.Attachment>
-          );
-        }
-
-        const res = checkValidImage(path).then(async (response: any) => {
-          return response.status === 'ok';
-        });
-        if (res) {
-          return (
-            <Fragment>
-              <Speech.Attachment>
-                <Speech.Image
-                  src={path}
-                  alt="image"
-                  onClick={() => this.props.onSelectImage(path)}
-                />
-              </Speech.Attachment>
-            </Fragment>
-          );
-        }
-      }
-      return <p>{message}</p>;
-    }
-  };
 
   private renderSystemEvent = () => {
     if (this.typeOfCommentIs(CommentType.SystemEvent)) {
@@ -111,29 +56,14 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
         payload.url && (
           <Fragment>
             {this.isImage(payload.url) ? (
-              <Speech.Attachment>
-                <Speech.Image
-                  src={payload.url}
-                  alt={payload.file_name}
-                  onClick={() => {
-                    if (payload.url) {
-                      this.props.onSelectImage(payload.url);
-                    }
-                  }}
-                />
-              </Speech.Attachment>
+              <SpeechImage
+                src={payload.url}
+                alt={payload.file_name || 'image'}
+                {...this.props}
+              />
             ) : (
               payload.file_name && (
-                <Speech.Attachment>
-                  <Speech.AttachmentFile
-                    href={payload.url}
-                    target="_blank"
-                    isMyComment={this.props.isMyComment}
-                  >
-                    <FileIcon fill={this.getIconColor()} />
-                    {payload.file_name}
-                  </Speech.AttachmentFile>
-                </Speech.Attachment>
+                <SpeechFile path={payload.url} {...this.props} />
               )
             )}
             {payload.caption && <p>{payload.caption}</p>}
@@ -235,32 +165,8 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
     return this.props.comment.type === type;
   };
 
-  private getFileName = (path: string) => {
-    if (path) {
-      return path.substring(path.lastIndexOf('/') + 1);
-    }
-    return '';
-  };
-
   private isImage = (path: string) => {
     return path.match(/\.(jpeg|jpg|gif|png|webp|svg)$/) != null;
-  };
-
-  private isFile = (path: string) => {
-    return path.match(/\.(mov|mp4|avi|mkv|tar|zip|rar|iso|pdf|7z)$/) != null;
-  };
-
-  private getFileFromText = (text: string) => {
-    const regex = RegExp(/(\[file\])(.*?)(\[\/file\])/g);
-    const match = regex.exec(text);
-    if (match) {
-      return match[2].trim();
-    }
-    return null;
-  };
-
-  private getIconColor = () => {
-    return this.props.isMyComment ? '#FFFFFF' : '#949A9D';
   };
 }
 
