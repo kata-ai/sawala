@@ -1,4 +1,4 @@
-import formatBytes from './formatBytes';
+import formatBytes from '../libs/utils/formatBytes';
 
 enum Format {
   Bytes = 'Bytes',

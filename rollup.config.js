@@ -62,9 +62,7 @@ export default {
         'node_modules/**/*',
         'images/*',
         'assets/*',
-        'example/*',
-        '**/*.test.ts',
-        '**/*.spec.ts'
+        'example/*'
       ],
       clean: true,
       check: false

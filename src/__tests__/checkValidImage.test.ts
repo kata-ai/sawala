@@ -1,4 +1,4 @@
-import checkValidImage from './checkValidImage';
+import checkValidImage from '../libs/utils/checkValidImage';
 
 const IMAGES = {
   correct:

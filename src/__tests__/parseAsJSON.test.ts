@@ -1,4 +1,4 @@
-import parseAsJSON from './parseAsJSON';
+import parseAsJSON from '../libs/utils/parseAsJSON';
 
 describe("Check to 'parseAsJSON' method.", () => {
   test('The json should be correct.', () => {
