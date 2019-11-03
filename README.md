@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/kata-ai/sawala.svg?branch=master)](https://travis-ci.org/kata-ai/sawala)
-[![Coverage Status](https://coveralls.io/repos/github/rohmad-st/sawala/badge.svg?branch=master)](https://coveralls.io/github/rohmad-st/sawala?branch=master)
 [![npm version](https://badge.fury.io/js/sawala.svg)](https://badge.fury.io/js/sawala)
 
 # Sawala
