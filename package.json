@@ -10,7 +10,9 @@
     "lint": "tslint -c tslint.json -p tsconfig.json 'src/**/*.{ts,tsx}'",
     "version:patch": "npm version patch && git push -u origin",
     "version:minor": "npm version minor && git push -u origin",
-    "version:major": "npm version major && git push -u origin"
+    "version:major": "npm version major && git push -u origin",
+    "cover": "istanbul cover node_modules/.bin/jest **/__tests__/*.ts - - -R spec",
+    "ci": "npm run lint && npm run build && npm run cover"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,7 @@
   "homepage": "https://github.com/kata-ai/sawala#readme",
   "devDependencies": {
     "@svgr/cli": "^4.3.3",
+    "@types/istanbul": "^0.4.30",
     "@types/jest": "^24.0.21",
     "@types/lodash-es": "^4.17.3",
     "@types/react": "^16.9.3",
@@ -35,6 +38,8 @@
     "@types/react-toggle": "^4.0.2",
     "@types/recompose": "^0.30.7",
     "@types/styled-components": "^4.1.19",
+    "coveralls": "^3.0.7",
+    "istanbul": "^0.4.5",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "react": "^16.9.0",
