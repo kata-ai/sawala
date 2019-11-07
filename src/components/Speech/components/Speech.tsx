@@ -17,8 +17,8 @@ export const Attachment = styled.div`
 export const AttachmentFile = styled.a<{ isMyComment?: boolean }>`
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 6px 8px;
+  align-items: flex-start;
+  padding: 0 8px;
   color: ${props =>
     props.isMyComment ? variables.colors.white : variables.colors.gray80};
   background-color: transparent;
@@ -42,7 +42,14 @@ export const AttachmentFile = styled.a<{ isMyComment?: boolean }>`
     box-shadow: none;
   }
 `;
-
+export const AttachmentIcon = styled.div`
+  flex: 0 24px;
+  margin-top: 4px;
+`;
+export const AttachmentName = styled.div`
+  flex: 1;
+  word-break: break-all;
+`;
 export const Image = styled.img`
   margin: 0;
   padding: 0;

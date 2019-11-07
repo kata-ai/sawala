@@ -168,6 +168,20 @@ export const Chat = styled.div<{
         }
       }
     `}
+
+    ${props =>
+      props.position === 'left' &&
+      !props.hideMenuOnHover &&
+      css`
+        &:hover,
+        &:focus,
+        &:active {
+          ${ChatTime} {
+            display: inline-block;
+            margin: 0;
+          }
+        }
+      `}
 `;
 
 export const ChatImage = styled.div<{ position?: 'left' | 'right' }>`
