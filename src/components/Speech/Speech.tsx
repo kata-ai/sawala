@@ -66,8 +66,12 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
                 target="_blank"
                 isMyComment={this.props.isMyComment}
               >
-                <FileIcon fill={this.getIconColor()} />
-                {this.getFileName(path)}
+                <Speech.AttachmentIcon>
+                  <FileIcon fill={this.getIconColor()} />
+                </Speech.AttachmentIcon>
+                <Speech.AttachmentName>
+                  {this.getFileName(path)}
+                </Speech.AttachmentName>
               </Speech.AttachmentFile>
             </Speech.Attachment>
           );
@@ -127,8 +131,12 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
               target="_blank"
               isMyComment={this.props.isMyComment}
             >
-              <FileIcon fill={this.getIconColor()} />
-              {`${fileName}.${fileExtension}`}
+              <Speech.AttachmentIcon>
+                <FileIcon fill={this.getIconColor()} />
+              </Speech.AttachmentIcon>
+              <Speech.AttachmentName>
+                {`${fileName}.${fileExtension}`}
+              </Speech.AttachmentName>
             </Speech.AttachmentFile>
           </Speech.Attachment>
         );
@@ -174,8 +182,12 @@ class QismoSpeech extends React.Component<SpeechProps, SpeechState> {
                     target="_blank"
                     isMyComment={this.props.isMyComment}
                   >
-                    <FileIcon fill={this.getIconColor()} />
-                    {payload.file_name}
+                    <Speech.AttachmentIcon>
+                      <FileIcon fill={this.getIconColor()} />
+                    </Speech.AttachmentIcon>
+                    <Speech.AttachmentName>
+                      {payload.file_name}
+                    </Speech.AttachmentName>
                   </Speech.AttachmentFile>
                 </Speech.Attachment>
               )
