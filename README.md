@@ -313,9 +313,7 @@ Comment also is response from qiscus-sdk-web-core. Look like this:
 
 ## License
 
-By default, the root level of this repo, as well as the demo site, are licensed under the [Apache 2.0 license](LICENSE). While most components use the same license, please note that some packages (like our assets package) may use a different license. Any overriding licenses for each package will be mentioned in the `LICENSE` file located at the root of each package.
-
-Copyright (c) 2019 Kata.ai and/or contributors. All rights reserved.
+Licensed under the [Apache 2.0 license](LICENSE). Copyright (c) 2019 Kata.ai and/or contributors. All rights reserved.
 
 ## Maintainers
 
