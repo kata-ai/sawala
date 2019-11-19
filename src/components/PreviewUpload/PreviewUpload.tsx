@@ -6,14 +6,13 @@ import { SendIcon, CloseIcon } from 'icons';
 import { Circle } from '@kata-kit/loading';
 
 import { formatBytes } from 'libs/utils';
+import { PreviewImage } from 'types';
 
 interface PreviewProps {
-  background?: string;
+  background?: PreviewImage;
   onUploadImage: (file: File) => Promise<string>;
-  currentFile: File;
-  imageURL?: string;
   onSubmitImage: (url: string, file: File, caption: string) => Promise<any>;
-  onClearPreview: () => void;
+  onClearPreview: () => Promise<boolean>;
 }
 
 interface PreviewStates {
@@ -32,9 +31,14 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
   }
 
   componentDidMount() {
-    this.props.onUploadImage(this.props.currentFile).then(() => {
-      // do nothing
-    });
+    const { background } = this.props;
+    const file = background && background.file;
+    const serverURL = background && background.serverURL;
+    if (file && !serverURL) {
+      this.props.onUploadImage(file).then(() => {
+        // do nothing
+      });
+    }
   }
 
   handleCaptionChange = (event: any) => {
@@ -49,40 +53,45 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
 
   handleSubmit = () => {
     const { caption } = this.state;
-    const { imageURL, currentFile, onSubmitImage, onClearPreview } = this.props;
-    if (imageURL && currentFile) {
-      onSubmitImage(imageURL, currentFile, caption).then(() => {
-        onClearPreview();
-        this.setState({ ...this.defaultStates });
+    const { background, onSubmitImage, onClearPreview } = this.props;
+    const file = background && background.file;
+    const serverURL = background && background.serverURL;
+    if (file && serverURL) {
+      onSubmitImage(serverURL, file, caption).then(() => {
+        onClearPreview().finally(() => {
+          this.setState({ ...this.defaultStates });
+        });
       });
     }
   };
 
   handleCloseImage = () => {
-    this.setState({ ...this.defaultStates });
-    this.props.onClearPreview();
+    this.props.onClearPreview().finally(() => {
+      this.setState({ ...this.defaultStates });
+    });
   };
 
   render() {
-    const { currentFile, imageURL } = this.props;
+    const { background } = this.props;
+    const file = background && background.file;
+    const localURL = background && background.localURL;
+    const serverURL = background && background.serverURL;
     return (
       <Preview.Main>
         <Preview.Thumbnail>
           <Preview.ThumbnailImage>
-            <Preview.Image src={this.props.background} alt="thumbnail" />
+            <Preview.Image src={localURL} alt="thumbnail" />
           </Preview.ThumbnailImage>
           <Preview.ThumbnailInfo>
-            {currentFile && (
+            {file && (
               <>
-                <Preview.Title>{currentFile.name}</Preview.Title>
-                <Preview.Subtitle>
-                  {formatBytes(currentFile.size)}
-                </Preview.Subtitle>
+                <Preview.Title>{file.name}</Preview.Title>
+                <Preview.Subtitle>{formatBytes(file.size)}</Preview.Subtitle>
               </>
             )}
           </Preview.ThumbnailInfo>
           <Preview.ThumbnailProgress>
-            {!imageURL ? (
+            {!serverURL ? (
               <Circle />
             ) : (
               <Preview.CloseButton
@@ -110,9 +119,9 @@ class QismoPreviewUpload extends React.Component<PreviewProps, PreviewStates> {
               event.preventDefault();
               this.handleSubmit();
             }}
-            disabled={!imageURL}
+            disabled={!serverURL}
           >
-            <SendIcon fill={!imageURL ? '#C2C7C8' : '#006FE6'} />
+            <SendIcon fill={!serverURL ? '#C2C7C8' : '#006FE6'} />
           </Preview.ActionButton>
         </Preview.Action>
       </Preview.Main>

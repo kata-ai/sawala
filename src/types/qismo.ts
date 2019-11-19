@@ -63,6 +63,12 @@ export type Options = {
   avatar: boolean;
 };
 
+export type PreviewImage = {
+  file: File;
+  localURL?: string;
+  serverURL?: string;
+};
+
 export enum Qiscus {
   LOGIN_SUCCESS = 'qiscus::login_success',
   NEW_MESSAGE = 'qiscus::new_message',

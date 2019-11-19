@@ -6,7 +6,8 @@ import {
   Selected,
   CommentType,
   Payload,
-  AppConfig
+  AppConfig,
+  PreviewImage
 } from 'types';
 import { sendComment, uploadFile } from 'libs/utils';
 import { getPayload } from 'libs/utils/response';
@@ -15,10 +16,8 @@ export type withQismoSDKProps = {
   core?: QiscusCore;
   selected?: Selected | null;
   isLoadingMore?: boolean;
-  previewImage?: string;
+  previewImage: Map<string | number, PreviewImage>;
   activeReplyComment?: Comment;
-  currentFile?: File;
-  imageURL?: string; // image url for upload with message
   selectedImageURL?: string; // selected image for display in lightbox
   onFetchComments: (firstId: number) => Promise<any>;
   onInit: (config: AppConfig) => Promise<boolean>;
@@ -27,7 +26,7 @@ export type withQismoSDKProps = {
   onSubmitFile: (file: File) => void;
   onDeleteComment: (id: string, isForEveryone: boolean) => Promise<any>;
   onChatTarget?: (email: string) => void;
-  onClearPreview: () => void;
+  onClearPreview: () => Promise<boolean>;
   onPreviewImage: (file: File) => void;
   onSubmitText: (text: string) => Promise<any>;
   onReplyCommment?: (comment: Comment) => void;
@@ -42,11 +41,9 @@ export type withQismoSDKProps = {
 
 interface QiscusSDK {
   authData: object;
-  previewImage?: string;
-  file?: File;
+  previewImage: Map<string | number, PreviewImage>;
   activeReplyComment?: Comment;
   isLoadingMore?: boolean;
-  imageURL?: string;
   selectedImageURL?: string;
 }
 
@@ -55,7 +52,8 @@ export function withQismoSDK(
 ): ComponentClass<withQismoSDKProps> {
   return class extends Component<withQismoSDKProps> {
     public state: QiscusSDK = {
-      authData: {}
+      authData: {},
+      previewImage: new Map()
     };
 
     constructor(props: withQismoSDKProps) {
@@ -109,7 +107,7 @@ export function withQismoSDK(
           const type = CommentType.FileAttachment;
 
           // send comment with image url
-          sendComment(text, uniqueId, type, payload).then(() => {
+          sendComment(text, uniqueId, type, payload).then((response: any) => {
             this.handleClearPreview();
           });
         });
@@ -189,30 +187,43 @@ export function withQismoSDK(
     };
 
     handlePreviewImage = (ofFile: File) => {
-      if (this.state.previewImage) {
-        URL.revokeObjectURL(this.state.previewImage);
+      const selected = window.qiscus && window.qiscus.selected;
+      if (selected) {
+        const previewImage = this.state.previewImage;
+        this.setState({
+          previewImage: previewImage.set(selected.id, {
+            localURL: URL.createObjectURL(ofFile),
+            file: ofFile
+          })
+        });
       }
-      this.setState({
-        previewImage: URL.createObjectURL(ofFile),
-        file: ofFile
-      });
     };
 
     handleUploadImage = (ofFile: File) => {
+      const previewImage = this.state.previewImage;
+      const selected = window.qiscus && window.qiscus.selected;
+      if (!selected) return;
       // upload file to qiscus server
       return uploadFile(ofFile).then((url: string) => {
-        this.setState({ imageURL: url });
+        this.setState({
+          previewImage: previewImage.set(selected.id, {
+            ...previewImage.get(selected.id),
+            serverURL: url,
+            file: ofFile
+          })
+        });
         return Promise.resolve(url);
       });
     };
 
     handleClearPreview = () => {
-      this.setState({
-        previewImage: undefined,
-        file: undefined,
-        imageURL: undefined
-      });
-      if (this.state.previewImage) URL.revokeObjectURL(this.state.previewImage);
+      const selected = window.qiscus && window.qiscus.selected;
+      const previewImage = this.state.previewImage;
+      if (selected) {
+        previewImage.delete(selected.id);
+      }
+      this.forceUpdate();
+      return Promise.resolve(true);
     };
 
     handleSelectImage = (image: string) => {
@@ -230,8 +241,6 @@ export function withQismoSDK(
           selected={window.qiscus.selected}
           isLoadingMore={this.state.isLoadingMore}
           onInit={this.handleInit}
-          currentFile={this.state.file}
-          imageURL={this.state.imageURL}
           selectedImageURL={this.state.selectedImageURL}
           onUploadImage={this.handleUploadImage}
           onPreviewImage={this.handlePreviewImage}

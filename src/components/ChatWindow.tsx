@@ -64,13 +64,11 @@ class ChatWindow extends React.Component<WindowProps, States> {
     const {
       onUploadImage,
       previewImage,
-      currentFile,
       onSubmitImage,
       onClearPreview,
       selected,
       noSelectedComponent,
-      headerComponent,
-      imageURL
+      headerComponent
     } = this.props;
     const { reload } = this.state;
 
@@ -79,14 +77,12 @@ class ChatWindow extends React.Component<WindowProps, States> {
         <Container>
           {selected ? (
             <React.Fragment>
-              {previewImage && currentFile && (
+              {previewImage && previewImage.get(selected.id) && (
                 <PreviewUpload
-                  imageURL={imageURL}
                   onUploadImage={onUploadImage}
-                  currentFile={currentFile}
                   onSubmitImage={onSubmitImage}
                   onClearPreview={onClearPreview}
-                  background={previewImage}
+                  background={previewImage.get(selected.id)}
                 />
               )}
 
