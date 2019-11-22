@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Message:** update style message type of file
 - dont hide time in left position
 
-## Removed
+### Removed
 
 - **build:** remove unused scripts in `package.json`
 
