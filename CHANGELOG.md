@@ -82,19 +82,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Delete message
 - Reply message
 - Image and file attachment
-- Lightbox: Show preview ime
+- Lightbox: show preview image
 
 - **Methods UI:**
-- chatTarget: _Chat target_
-- setSelected: _Set selected_
+- chatTarget: _start chat to specific room_
+- setSelected: _manual trigger to set selected active room_
 
 - **Props:**
-- config: _App Configuration for setup_
-- onRendered: _Callback after Sawala successfully rendered_
-- newMessagesCallback: _Callback when user have a new messages incoming_
-- onClickDetailComment: _Callback when user click `Message Details` in message_
-- noSelectedComponent: _Custom no selected chat room element_
-- loginSuccessCallback: _Callback after user successfully logged in qiscus-sdk_
+- config: _app configuration for setup_
+- onRendered: _callback after Sawala is successfully rendered_
+- newMessagesCallback: _callback when user have a new messages incoming_
+- onClickDetailComment: _callback when user click `Message Details` in message_
+- noSelectedComponent: _custom no selected chat room element_
+- loginSuccessCallback: _callback after user successfully logged in qiscus-sdk_
 - onClickHeaderDetail: _when user click `Chat Details`_
 - onClickHeaderAgent: _when user click `Assign/Remove Agent`_
 - onClickResolved: _when user click `Resolved` button_
